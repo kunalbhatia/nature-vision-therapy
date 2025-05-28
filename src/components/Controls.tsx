@@ -10,22 +10,25 @@ function Controls({ stories, onStorySelect, fontSize, setFontSize }: ControlsPro
     if (!document.fullscreenElement) doc.requestFullscreen();
     else document.exitFullscreen();
   };
-
   return (
     <div className='flex flex-wrap justify-between items-center gap-8 mb-4'>
       <div className='flex space-x-4'>
-        <button
-          onClick={() => setFontSize(Math.max(1.2, fontSize - 0.2))}
-          className='bg-emerald-500 hover:bg-emerald-400 text-green-900 font-bold py-2 px-4 rounded-full'
-        >
-          −
-        </button>
-        <button
-          onClick={() => setFontSize(fontSize + 0.2)}
-          className='bg-emerald-500 hover:bg-emerald-400 text-green-900 font-bold py-2 px-4 rounded-full'
-        >
-          +
-        </button>
+        <div className='tooltip' data-tip='Decrease font size'>
+          <button
+            onClick={() => setFontSize(Math.max(1.2, fontSize - 0.2))}
+            className='bg-emerald-500 hover:bg-emerald-400 text-green-900 font-bold py-2 px-4 rounded-full'
+          >
+            −
+          </button>
+        </div>
+        <div className='tooltip' data-tip='Increase font size'>
+          <button
+            onClick={() => setFontSize(fontSize + 0.2)}
+            className='bg-emerald-500 hover:bg-emerald-400 text-green-900 font-bold py-2 px-4 rounded-full'
+          >
+            +
+          </button>
+        </div>
       </div>
 
       <select
@@ -42,13 +45,14 @@ function Controls({ stories, onStorySelect, fontSize, setFontSize }: ControlsPro
           </option>
         ))}
       </select>
-
-      <button
-        onClick={toggleFullscreen}
-        className='bg-emerald-500 hover:bg-emerald-400 text-green-900 font-bold py-2 px-4 rounded-full'
-      >
-        ⛶
-      </button>
+      <div className='tooltip' data-tip='Toggle fullscreen'>
+        <button
+          onClick={toggleFullscreen}
+          className='bg-emerald-500 hover:bg-emerald-400 text-green-900 font-bold py-2 px-4 rounded-full'
+        >
+          ⛶
+        </button>
+      </div>
     </div>
   );
 }
