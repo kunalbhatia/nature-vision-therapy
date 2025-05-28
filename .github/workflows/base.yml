@@ -1,0 +1,80 @@
+name: CI
+
+on:
+  push:
+    branches: [development, main]
+  pull_request:
+    branches: [development, main]
+
+jobs:
+  setup:
+    name: Install & Format Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup PNPM
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Check formatting
+        run: pnpm exec pretty-quick --check
+
+  validate:
+    name: Lint & Test
+    needs: setup
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup PNPM
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Disable workspace mode
+        run: echo "node-linker=hoisted" >> .npmrc
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Run ESLint
+        run: pnpm lint
+
+      - name: Run Cypress Component Tests
+        run: pnpm cy:run:component
+
+      - name: Start app server
+        run: pnpm dev &
+      - name: Wait for server to be ready
+        run: npx wait-on http://localhost:3000
+      - name: Run Cypress E2E
+        run: pnpm cy:run:e2e
+
+  build:
+    name: Build Project
+    needs: validate
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup PNPM
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Disable workspace mode
+        run: echo "node-linker=hoisted" >> .npmrc
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build
+        run: pnpm build

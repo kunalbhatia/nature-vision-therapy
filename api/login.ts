@@ -2,12 +2,13 @@ import { MongoClient } from 'mongodb';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import cookie from 'cookie';
+import { VercelRequest, VercelResponse } from '@vercel/node';
 
 const uri = process.env.MONGODB_URI!;
 const client = new MongoClient(uri);
 const JWT_SECRET = process.env.JWT_SECRET!;
 
-export default async function handler(req, res) {
+export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'POST') return res.status(405).end();
 
   const { email, password } = JSON.parse(req.body);
