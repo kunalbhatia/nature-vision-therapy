@@ -16,13 +16,13 @@ function Controls({ stories, onStorySelect, fontSize, setFontSize }: ControlsPro
       <div className='flex space-x-4'>
         <button
           onClick={() => setFontSize(Math.max(1.2, fontSize - 0.2))}
-          className='bg-emerald-500 hover:bg-emerald-400 text-white font-bold py-2 px-4 rounded-full'
+          className='bg-emerald-500 hover:bg-emerald-400 text-green-900 font-bold py-2 px-4 rounded-full'
         >
           −
         </button>
         <button
           onClick={() => setFontSize(fontSize + 0.2)}
-          className='bg-emerald-500 hover:bg-emerald-400 text-white font-bold py-2 px-4 rounded-full'
+          className='bg-emerald-500 hover:bg-emerald-400 text-green-900 font-bold py-2 px-4 rounded-full'
         >
           +
         </button>
@@ -33,7 +33,7 @@ function Controls({ stories, onStorySelect, fontSize, setFontSize }: ControlsPro
           const selectedStory = stories.find(s => s.id === e.target.value);
           if (selectedStory) onStorySelect(selectedStory);
         }}
-        className='bg-emerald-500 hover:bg-emerald-400 text-white font-bold py-2 px-4 rounded-lg'
+        className='bg-emerald-500 hover:bg-emerald-400 text-green-900 font-bold py-2 px-4 rounded-lg'
       >
         <option value=''>Select a story</option>
         {stories.map(story => (
@@ -45,7 +45,7 @@ function Controls({ stories, onStorySelect, fontSize, setFontSize }: ControlsPro
 
       <button
         onClick={toggleFullscreen}
-        className='bg-emerald-500 hover:bg-emerald-400 text-white font-bold py-2 px-4 rounded-full'
+        className='bg-emerald-500 hover:bg-emerald-400 text-green-900 font-bold py-2 px-4 rounded-full'
       >
         ⛶
       </button>
