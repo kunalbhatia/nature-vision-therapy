@@ -1,9 +1,9 @@
-import React from 'react';
+import React from "react";
 
 const getColoredText = (text: string) => {
-  if (!text) return '';
+  if (!text) return "";
 
-  const chars = text.split('');
+  const chars = text.split("");
   const total = chars.length;
   const indices = [...Array(total).keys()];
 
@@ -20,13 +20,17 @@ const getColoredText = (text: string) => {
     pinkSet: Set<number>;
   }
 
-  const coloredChar = ({ char, index, pinkSet }: ColoredCharProps): React.ReactNode => {
-    if (char.trim() === '') return char;
-    let colorClass = '';
+  const coloredChar = ({
+    char,
+    index,
+    pinkSet,
+  }: ColoredCharProps): React.ReactNode => {
+    if (char.trim() === "") return char;
+    let colorClass = "";
     if (pinkSet.has(index)) {
-      colorClass = 'text-pinkCustom';
+      colorClass = "text-pinkCustom";
     } else {
-      colorClass = Math.random() < 0.5 ? 'text-red-500' : 'text-blue-500';
+      colorClass = Math.random() < 0.5 ? "text-red-500" : "text-blue-500";
     }
     return (
       <span key={index} className={colorClass}>
@@ -35,31 +39,52 @@ const getColoredText = (text: string) => {
     );
   };
 
-  return chars.map((char: string, i: number) => coloredChar({ char, index: i, pinkSet }));
+  return chars.map((char: string, i: number) =>
+    coloredChar({ char, index: i, pinkSet }),
+  );
 };
 type StoryDisplayProps = {
   readonly story: { content: string } | null;
   readonly fontSize: number;
   readonly isLoading: boolean;
 };
-export default function StoryDisplay({ story, fontSize, isLoading }: StoryDisplayProps) {
+export default function StoryDisplay({
+  story,
+  fontSize,
+  isLoading,
+}: StoryDisplayProps) {
   const renderedContent = story?.content ? getColoredText(story.content) : null;
+
   if (story?.content === null || (!story && isLoading)) {
     return (
       <>
-        <p className='text-gray-500'>Loading your story...</p>
+        <p className="text-gray-500">Loading your story...</p>
         <br />
       </>
     );
   }
+
   if (!story?.content && !isLoading) {
-    return <p className='text-gray-500'>Please select a story topic to generate story.</p>;
-  }
-  if (renderedContent) {
     return (
-      <p className='text-center' style={{ fontSize: `${fontSize}rem` }}>
-        {renderedContent}
+      <p className="text-gray-500">
+        Please select a story topic to generate story.
       </p>
     );
   }
+
+  if (renderedContent) {
+    return (
+      <div
+        className="mx-auto p-4 rounded-md shadow-md bg-black overflow-y-auto"
+        style={{
+          height: "min(65vh, 1024px)",
+          fontSize: `${fontSize}rem`,
+        }}
+      >
+        <p className="text-left whitespace-pre-wrap">{renderedContent}</p>
+      </div>
+    );
+  }
+
+  return null;
 }

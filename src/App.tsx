@@ -1,27 +1,32 @@
-import { useEffect, useState } from 'react';
-import StoryDisplay from './components/StoryDisplay';
-import Controls from './components/Controls';
-import StoryGenerator from './components/StoryGenerator';
+import { useEffect, useState } from "react";
+import StoryDisplay from "./components/StoryDisplay";
+import Controls from "./components/Controls";
+import StoryGenerator from "./components/StoryGenerator";
 
-import './index.css';
-import Navbar from './components/NavBar';
-import Modal from './components/Modal';
-import LoginForm from './components/LoginForm';
-import SignupForm from './components/SignupForm';
-import { useSnackbar } from './hooks/Snackbar';
-import useAuthStatus from './hooks/AuthStatus';
-import Personalization from './components/Personalization';
-import { usePreloader } from './hooks/Preloader';
+import "./index.css";
+import Navbar from "./components/NavBar";
+import Modal from "./components/Modal";
+import LoginForm from "./components/LoginForm";
+import SignupForm from "./components/SignupForm";
+import { useSnackbar } from "./hooks/Snackbar";
+import useAuthStatus from "./hooks/AuthStatus";
+import Personalization from "./components/Personalization";
+import { usePreloader } from "./hooks/Preloader";
+import AdBanner from "./components/AdBanner";
 
 function App() {
   const { showMessage } = useSnackbar();
   const { isLoggedIn: isAuthenticated, user } = useAuthStatus();
   const { showPreloader, hidePreloader } = usePreloader();
-  const [modalType, setModalType] = useState<'login' | 'signup' | 'personalize' | null>(null);
+  const [modalType, setModalType] = useState<
+    "login" | "signup" | "personalize" | null
+  >(null);
 
   const [fontSize, setFontSize] = useState(1.5);
 
-  const [selectedStory, setSelectedStory] = useState<{ content: string } | null>(null);
+  const [selectedStory, setSelectedStory] = useState<{
+    content: string;
+  } | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(isAuthenticated);
 
@@ -30,12 +35,12 @@ function App() {
     setSelectedStory(null);
     showPreloader();
     StoryGenerator({ topic })
-      .then(story => {
+      .then((story) => {
         setSelectedStory({ content: story });
       })
-      .catch(error => {
-        console.error('Error generating story:', error);
-        setSelectedStory({ content: 'Failed to generate story.' });
+      .catch((error) => {
+        console.error("Error generating story:", error);
+        setSelectedStory({ content: "Failed to generate story." });
       })
       .finally(() => {
         setIsLoading(false);
@@ -46,42 +51,53 @@ function App() {
     setIsLoggedIn(isAuthenticated);
   }, [isAuthenticated]);
   useEffect(() => {
-    console.log('User:', user);
+    console.log("User:", user);
   }, [user]);
   const handleLogout = () => {
     showPreloader();
-    fetch('/api/logout', { method: 'POST' })
-      .then(res => res.json())
-      .then(data => {
-        showMessage(data.message || 'Logged out', data.status);
+    fetch("/api/logout", { method: "POST" })
+      .then((res) => res.json())
+      .then((data) => {
+        showMessage(data.message || "Logged out", data.status);
         setIsLoggedIn(false);
       })
-      .catch(err => {
-        console.error('Logout error:', err);
-        showMessage('Logout failed', 'error');
+      .catch((err) => {
+        console.error("Logout error:", err);
+        showMessage("Logout failed", "error");
       })
       .finally(() => {
         hidePreloader();
       });
   };
+  useEffect(() => {
+    setIsLoggedIn(isAuthenticated);
+  }, [isAuthenticated]);
+  useEffect(() => {
+    console.log("User:", user);
+  }, [user]);
+
   return (
     <div
-      className='min-h-screen flex flex-col items-center'
+      className="min-h-screen flex flex-col items-center"
       style={{
-        backgroundImage: 'url(./trees.png)',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
+        backgroundImage: "url(./trees.png)",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
       }}
     >
       <Navbar
-        onLogin={() => setModalType('login')}
+        onLogin={() => setModalType("login")}
         onLogout={handleLogout}
-        onConfigure={() => setModalType('personalize')}
-        onSignup={() => setModalType('signup')}
+        onConfigure={() => setModalType("personalize")}
+        onSignup={() => setModalType("signup")}
         isLoggedIn={isLoggedIn}
       />
-      <div className='min-h-fit bg-black text-white flex flex-col items-center justify-start p-6 shadow-lg rounded-md w-full '>
-        <Controls onTopicSelect={handleTopicSelect} fontSize={fontSize} setFontSize={setFontSize} />
+      <div className="mt-4 w-[98%] min-h-fit bg-black text-white flex flex-col items-center justify-start p-6 shadow-lg rounded-md">
+        <Controls
+          onTopicSelect={handleTopicSelect}
+          fontSize={fontSize}
+          setFontSize={setFontSize}
+        />
         <StoryDisplay
           isLoading={isLoading}
           story={selectedStory ? { content: selectedStory.content } : null}
@@ -89,30 +105,31 @@ function App() {
         />
       </div>
 
-      {modalType === 'login' && (
-        <Modal title='Login' onClose={() => setModalType(null)}>
+      {modalType === "login" && (
+        <Modal title="Login" onClose={() => setModalType(null)}>
           <LoginForm
             onLogin={() => setModalType(null)}
             onStatusUpdate={(message, status) => {
-              if (status === 'success') setIsLoggedIn(true);
+              if (status === "success") setIsLoggedIn(true);
               showMessage(message, status);
             }}
           />
         </Modal>
       )}
-      {modalType === 'signup' && (
-        <Modal title='Sign Up' onClose={() => setModalType(null)}>
+      {modalType === "signup" && (
+        <Modal title="Sign Up" onClose={() => setModalType(null)}>
           <SignupForm
             onSignup={() => setModalType(null)}
             onStatusUpdate={(message, status) => showMessage(message, status)}
           />
         </Modal>
       )}
-      {modalType === 'personalize' && (
-        <Modal title='Perzonalization' onClose={() => setModalType(null)}>
+      {modalType === "personalize" && (
+        <Modal title="Perzonalization" onClose={() => setModalType(null)}>
           <Personalization onSave={() => setModalType(null)} />
         </Modal>
       )}
+      <AdBanner isVisible={false} />
     </div>
   );
 }
