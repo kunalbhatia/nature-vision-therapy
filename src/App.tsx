@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import StoryDisplay from './components/StoryDisplay';
 import Controls from './components/Controls';
 import StoryGenerator from './components/StoryGenerator';
