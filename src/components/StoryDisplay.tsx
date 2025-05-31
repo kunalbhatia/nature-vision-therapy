@@ -35,18 +35,21 @@ const getColoredText = (text: string) => {
     );
   };
 
-  return chars.map((char: string, i: number) =>
-    coloredChar({ char, index: i, pinkSet })
-  );
+  return chars.map((char: string, i: number) => coloredChar({ char, index: i, pinkSet }));
 };
 type StoryDisplayProps = {
-  readonly story: { content: string } | null,
-  readonly fontSize: number,
+  readonly story: { content: string } | null;
+  readonly fontSize: number;
+  readonly isLoading: boolean;
 };
-export default function StoryDisplay({ story, fontSize }: StoryDisplayProps) {
+export default function StoryDisplay({ story, fontSize, isLoading }: StoryDisplayProps) {
   return (
     <p className='leading-relaxed break-words' style={{ fontSize: `${fontSize}rem` }}>
-      {story ? getColoredText(story.content) : 'Please select a story to read.'}
+      {isLoading ? <span className='text-gray-500'>Loading story...</span> : null}
+      {story?.content && getColoredText(story.content)}
+      {!story?.content && !isLoading && (
+        <span className='text-gray-500'>Please select a story topic to generate story.</span>
+      )}
     </p>
   );
 }
