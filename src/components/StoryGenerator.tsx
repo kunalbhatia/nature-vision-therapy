@@ -12,7 +12,7 @@ export default async function StoryGenerator({ topic }: StoryGeneratorType) {
         role: 'user',
         parts: [
           {
-            text: `Write a short ${topic.toLowerCase()} for kids in plain text, directly provide the story without any title.`,
+            text: `Write a short ${topic.toLowerCase()} for kids in plain text (no title), inspired by Indian culture, where the hero is always Jhalak (a brave girl), and characters are chosen from [Jhalak, Ruhi, Manya, Kunal, Dhiru, Adu, Badi Mumma, Radhe, Ronu]. The story should be engaging, simple, and suitable for children aged 5-18. Use a friendly and encouraging tone.`,
           },
         ],
       },
