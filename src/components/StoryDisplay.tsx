@@ -43,13 +43,23 @@ type StoryDisplayProps = {
   readonly isLoading: boolean;
 };
 export default function StoryDisplay({ story, fontSize, isLoading }: StoryDisplayProps) {
-  return (
-    <p className='leading-relaxed break-words' style={{ fontSize: `${fontSize}rem` }}>
-      {isLoading ? <span className='text-gray-500'>Loading story...</span> : null}
-      {story?.content ? getColoredText(story.content) : null}
-      {!story?.content && !isLoading && (
-        <span className='text-gray-500'>Please select a story topic to generate story.</span>
-      )}
-    </p>
-  );
+  const renderedContent = story?.content ? getColoredText(story.content) : null;
+  if (story?.content === null || (!story && isLoading)) {
+    return (
+      <>
+        <p className='text-gray-500'>Loading your story...</p>
+        <br />
+      </>
+    );
+  }
+  if (!story?.content && !isLoading) {
+    return <p className='text-gray-500'>Please select a story topic to generate story.</p>;
+  }
+  if (renderedContent) {
+    return (
+      <p className='text-center' style={{ fontSize: `${fontSize}rem` }}>
+        {renderedContent}
+      </p>
+    );
+  }
 }
