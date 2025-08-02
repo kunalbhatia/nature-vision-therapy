@@ -9,6 +9,7 @@ function App() {
   const [isLoading, setIsLoading] = useState(false);
   const handleTopicSelect = (topic: string) => {
     setIsLoading(true);
+    setSelectedStory(null);
     StoryGenerator({ topic })
       .then(story => {
         setSelectedStory({ content: story });
