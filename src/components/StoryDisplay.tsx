@@ -46,7 +46,7 @@ export default function StoryDisplay({ story, fontSize, isLoading }: StoryDispla
   return (
     <p className='leading-relaxed break-words' style={{ fontSize: `${fontSize}rem` }}>
       {isLoading ? <span className='text-gray-500'>Loading story...</span> : null}
-      {!isLoading && story?.content && getColoredText(story.content)}
+      {story?.content && getColoredText(story.content)}
       {!story?.content && !isLoading && (
         <span className='text-gray-500'>Please select a story topic to generate story.</span>
       )}
