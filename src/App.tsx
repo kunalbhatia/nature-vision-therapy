@@ -1,12 +1,17 @@
 import { useState } from 'react';
 import StoryDisplay from './components/StoryDisplay';
 import Controls from './components/Controls';
-import './index.css';
 import StoryGenerator from './components/StoryGenerator';
+
+import './index.css';
+import Navbar from './components/NavBar';
+
 function App() {
   const [fontSize, setFontSize] = useState(1.5);
+
   const [selectedStory, setSelectedStory] = useState<{ content: string } | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+
   const handleTopicSelect = (topic: string) => {
     setIsLoading(true);
     setSelectedStory(null);
@@ -24,14 +29,15 @@ function App() {
   };
   return (
     <div
-      className='bg-emerald-500 min-h-screen flex flex-col items-center p-6'
-      style={{ backgroundImage: 'url(./trees.png)', backgroundSize: 'cover' }}
+      className='min-h-screen flex flex-col items-center'
+      style={{
+        backgroundImage: 'url(./trees.png)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+      }}
     >
-      <h1 className='text-2xl font-bold mb-4 text-green-900 bg-green-500 bg-opacity-50 backdrop-blur-md rounded-md p-2'>
-        Nature Theme Vision Therapy
-      </h1>
-      <hr className='w-full mb-6 border-t-4 border-green-600 ' />
-      <div className='min-h-fit bg-black text-white flex flex-col items-center justify-start p-6 shadow-lg rounded-md w-full'>
+      <Navbar />
+      <div className='min-h-fit bg-black text-white flex flex-col items-center justify-start p-6 shadow-lg rounded-md w-full '>
         <Controls onTopicSelect={handleTopicSelect} fontSize={fontSize} setFontSize={setFontSize} />
         <StoryDisplay
           isLoading={isLoading}
