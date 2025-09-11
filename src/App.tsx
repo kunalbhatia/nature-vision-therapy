@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import StoryDisplay from './components/StoryDisplay';
 import Controls from './components/Controls';
 import StoryGenerator from './components/StoryGenerator';
@@ -62,6 +62,30 @@ function App() {
       })
       .finally(() => {
         hidePreloader();
+      });
+  };
+  useEffect(() => {
+    fetch('/api/pingMongo')
+      .then(res => res.json())
+      .then(data => console.log(data))
+      .catch(err => console.error('Error pinging MongoDB:', err));
+  }, []);
+  useEffect(() => {
+    setIsLoggedIn(isAuthenticated);
+  }, [isAuthenticated]);
+  useEffect(() => {
+    console.log('User:', user);
+  }, [user]);
+  const handleLogout = () => {
+    fetch('/api/logout', { method: 'POST' })
+      .then(res => res.json())
+      .then(data => {
+        showMessage(data.message || 'Logged out', data.status);
+        setIsLoggedIn(false);
+      })
+      .catch(err => {
+        console.error('Logout error:', err);
+        showMessage('Logout failed', 'error');
       });
   };
   return (

@@ -8,7 +8,7 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "dev:vercel": "vercel dev"
+    "dev:vercel": "vite --port 5678"
   },
   "dependencies": {
     "@google/generative-ai": "^0.24.1",
