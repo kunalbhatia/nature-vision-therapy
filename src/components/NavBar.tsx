@@ -1,11 +1,16 @@
 import { useState, useRef, useEffect } from 'react';
 import { FaUserCircle } from 'react-icons/fa';
-
-const Navbar = () => {
+type NavBarType = {
+  onLogin?: () => void;
+  onLogout?: () => void;
+  onConfigure?: () => void;
+  onSignup?: () => void;
+  isLoggedIn: boolean;
+};
+const Navbar = ({ onLogin, onLogout, onConfigure, onSignup, isLoggedIn }: NavBarType) => {
   const [showDropdown, setShowDropdown] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const timeoutRef = useRef<number | null>(null);
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Hide on outside click
   useEffect(() => {
@@ -28,11 +33,22 @@ const Navbar = () => {
   };
 
   const handleLoginToggle = () => {
-    setIsLoggedIn(prev => !prev);
+    if (typeof onLogin === 'function' && !isLoggedIn) onLogin();
+    if (typeof onLogout === 'function' && isLoggedIn) onLogout();
+    setShowDropdown(false);
+  };
+
+  const handleSignup = () => {
+    if (typeof onSignup === 'function') {
+      onSignup();
+    }
     setShowDropdown(false);
   };
 
   const handleConfigure = () => {
+    if (typeof onConfigure === 'function') {
+      onConfigure();
+    }
     setShowDropdown(false);
   };
 
@@ -56,9 +72,16 @@ const Navbar = () => {
             <button className='block px-4 py-2 hover:bg-gray-100 w-full text-left' onClick={handleLoginToggle}>
               {isLoggedIn ? 'Logout' : 'Login'}
             </button>
-            <button className='block px-4 py-2 hover:bg-gray-100 w-full text-left' onClick={handleConfigure}>
-              Sign Up
-            </button>
+            {!isLoggedIn && (
+              <button className='block px-4 py-2 hover:bg-gray-100 w-full text-left' onClick={handleSignup}>
+                Sign Up
+              </button>
+            )}
+            {isLoggedIn && (
+              <button className='block px-4 py-2 hover:bg-gray-100 w-full text-left' onClick={handleConfigure}>
+                Configure
+              </button>
+            )}
           </div>
         )}
       </div>
