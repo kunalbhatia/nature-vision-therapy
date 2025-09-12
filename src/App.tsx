@@ -65,18 +65,13 @@ function App() {
       });
   };
   useEffect(() => {
-    fetch('/api/pingMongo')
-      .then(res => res.json())
-      .then(data => console.log(data))
-      .catch(err => console.error('Error pinging MongoDB:', err));
-  }, []);
-  useEffect(() => {
     setIsLoggedIn(isAuthenticated);
   }, [isAuthenticated]);
   useEffect(() => {
     console.log('User:', user);
   }, [user]);
   const handleLogout = () => {
+    showPreloader();
     fetch('/api/logout', { method: 'POST' })
       .then(res => res.json())
       .then(data => {
@@ -86,6 +81,9 @@ function App() {
       .catch(err => {
         console.error('Logout error:', err);
         showMessage('Logout failed', 'error');
+      })
+      .finally(() => {
+        hidePreloader();
       });
   };
   return (
