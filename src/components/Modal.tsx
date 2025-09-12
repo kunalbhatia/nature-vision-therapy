@@ -49,4 +49,5 @@ const Modal: React.FC<ModalProps> = ({ title, children, onClose }) => {
     </div>
   );
 };
+
 export default Modal;
