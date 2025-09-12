@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useSnackbar } from '../hooks/Snackbar';
+import { usePreloader } from '../hooks/Preloader';
 
 const currentYear = new Date().getFullYear();
 
@@ -16,16 +17,17 @@ const defaultCharacters = [
   { key: 'bhai', label: "Your brother's name" },
 ];
 
-const Personalization = () => {
+const Personalization = ({ onSave }: { onSave: () => void }) => {
   const { showMessage } = useSnackbar();
   const [formData, setFormData] = useState<Record<string, { name: string; birthYear: string; gender: string }>>({});
   const [customCharacters, setCustomCharacters] = useState<{ key: string; label: string }[]>([]);
   const [newLabel, setNewLabel] = useState('');
-
+  const { showPreloader, hidePreloader } = usePreloader();
   // Auto-fill from API if available
   useEffect(() => {
     const fetchCharacters = async () => {
       try {
+        showPreloader();
         const res = await fetch('/api/get-characters-details', { credentials: 'include' });
         if (!res.ok) return;
         const { characterDetails } = await res.json();
@@ -56,6 +58,7 @@ const Personalization = () => {
 
           setFormData(newFormData);
           setCustomCharacters(newCustoms);
+          hidePreloader();
         }
       } catch (err) {
         console.error('Failed to fetch character details:', err);
@@ -83,6 +86,7 @@ const Personalization = () => {
   };
 
   const handleSubmit = async () => {
+    if (typeof onSave === 'function') onSave();
     const characterDetails = Object.fromEntries(
       Object.entries(formData).map(([key, { name, birthYear, gender }]) => {
         const isCustom = key.startsWith('custom_');
@@ -109,7 +113,7 @@ const Personalization = () => {
         return [key, entry];
       })
     );
-
+    showPreloader();
     const res = await fetch('/api/save-characters', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -123,6 +127,7 @@ const Personalization = () => {
     } else {
       showMessage(data.message || 'Failed to save details', data.status || 'error');
     }
+    hidePreloader();
   };
 
   const allCharacters = [...defaultCharacters, ...customCharacters];
