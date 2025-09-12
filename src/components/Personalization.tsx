@@ -66,6 +66,7 @@ const Personalization = ({ onSave }: { onSave: () => void }) => {
     };
 
     fetchCharacters();
+    // eslint-disable-next-line
   }, []);
 
   const handleChange = (key: string, field: 'name' | 'birthYear' | 'gender', value: string) => {
@@ -91,11 +92,15 @@ const Personalization = ({ onSave }: { onSave: () => void }) => {
       Object.entries(formData).map(([key, { name, birthYear, gender }]) => {
         const isCustom = key.startsWith('custom_');
 
-        const relationshipWithMe = isCustom
-          ? customCharacters.find(c => c.key === key)?.label || 'custom'
-          : key === 'me'
-          ? 'self'
-          : defaultCharacters.find(c => c.key === key)?.label || 'unknown';
+        let relationshipWithMe: string;
+
+        if (isCustom) {
+          relationshipWithMe = customCharacters.find(c => c.key === key)?.label || 'custom';
+        } else if (key === 'me') {
+          relationshipWithMe = 'self';
+        } else {
+          relationshipWithMe = defaultCharacters.find(c => c.key === key)?.label || 'unknown';
+        }
 
         const entry: {
           name: string;
