@@ -8,6 +8,7 @@ type NavBarType = {
   onSignup?: () => void;
   isLoggedIn: boolean;
 };
+
 const Navbar = ({ onLogin, onLogout, onConfigure, onSignup, isLoggedIn }: NavBarType) => {
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
