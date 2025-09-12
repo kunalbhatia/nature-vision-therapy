@@ -10,12 +10,13 @@ import LoginForm from './components/LoginForm';
 import SignupForm from './components/SignupForm';
 import { useSnackbar } from './hooks/Snackbar';
 import useAuthStatus from './hooks/AuthStatus';
+import Personalization from './components/Personalization';
 
 function App() {
   const { showMessage } = useSnackbar();
   const { isLoggedIn: isAuthenticated, user } = useAuthStatus();
 
-  const [modalType, setModalType] = useState<'login' | 'signup' | null>(null);
+  const [modalType, setModalType] = useState<'login' | 'signup' | 'personalize' | null>(null);
 
   const [fontSize, setFontSize] = useState(1.5);
 
@@ -74,7 +75,7 @@ function App() {
       <Navbar
         onLogin={() => setModalType('login')}
         onLogout={handleLogout}
-        // onConfigure={() => setModalType('login')}
+        onConfigure={() => setModalType('personalize')}
         onSignup={() => setModalType('signup')}
         isLoggedIn={isLoggedIn}
       />
@@ -104,6 +105,11 @@ function App() {
             onSignup={() => setModalType(null)}
             onStatusUpdate={(message, status) => showMessage(message, status)}
           />
+        </Modal>
+      )}
+      {modalType === 'personalize' && (
+        <Modal title='Perzonalization' onClose={() => setModalType(null)}>
+          <Personalization />
         </Modal>
       )}
     </div>

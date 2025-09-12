@@ -1,10 +1,10 @@
 import { MongoClient } from 'mongodb';
 import bcrypt from 'bcryptjs';
-
+import { VercelRequest, VercelResponse } from '@vercel/node';
 const uri = process.env.MONGODB_URI!;
 const client = new MongoClient(uri);
 
-export default async function handler(req, res) {
+export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'POST') return res.status(405).end();
 
   const { email, password } = req.body;
