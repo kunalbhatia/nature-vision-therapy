@@ -2,6 +2,7 @@
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { usePreloader } from '../hooks/Preloader';
 
 const loginSchema = z.object({
   email: z.email(),
@@ -14,6 +15,7 @@ type LoginFormType = {
   onStatusUpdate: (message: string, status?: 'error' | 'success' | 'info') => void;
 };
 const LoginForm = ({ onLogin, onStatusUpdate }: LoginFormType) => {
+  const { showPreloader, hidePreloader } = usePreloader();
   const {
     register,
     handleSubmit,
@@ -24,13 +26,14 @@ const LoginForm = ({ onLogin, onStatusUpdate }: LoginFormType) => {
 
   const onSubmit = async (data: LoginData) => {
     if (typeof onLogin === 'function') onLogin();
+    showPreloader();
     const res = await fetch('/api/login', {
       method: 'POST',
       body: JSON.stringify(data),
     });
     const result = await res.json();
     if (typeof onStatusUpdate === 'function') onStatusUpdate(result.message || 'Login failed', result.status);
-    console.log(result);
+    hidePreloader();
   };
 
   return (

@@ -11,11 +11,12 @@ import SignupForm from './components/SignupForm';
 import { useSnackbar } from './hooks/Snackbar';
 import useAuthStatus from './hooks/AuthStatus';
 import Personalization from './components/Personalization';
+import { usePreloader } from './hooks/Preloader';
 
 function App() {
   const { showMessage } = useSnackbar();
   const { isLoggedIn: isAuthenticated, user } = useAuthStatus();
-
+  const { showPreloader, hidePreloader } = usePreloader();
   const [modalType, setModalType] = useState<'login' | 'signup' | 'personalize' | null>(null);
 
   const [fontSize, setFontSize] = useState(1.5);
@@ -27,6 +28,7 @@ function App() {
   const handleTopicSelect = (topic: string) => {
     setIsLoading(true);
     setSelectedStory(null);
+    showPreloader();
     StoryGenerator({ topic })
       .then(story => {
         setSelectedStory({ content: story });
@@ -37,14 +39,9 @@ function App() {
       })
       .finally(() => {
         setIsLoading(false);
+        hidePreloader();
       });
   };
-  useEffect(() => {
-    fetch('/api/pingMongo')
-      .then(res => res.json())
-      .then(data => console.log(data))
-      .catch(err => console.error('Error pinging MongoDB:', err));
-  }, []);
   useEffect(() => {
     setIsLoggedIn(isAuthenticated);
   }, [isAuthenticated]);
@@ -52,6 +49,7 @@ function App() {
     console.log('User:', user);
   }, [user]);
   const handleLogout = () => {
+    showPreloader();
     fetch('/api/logout', { method: 'POST' })
       .then(res => res.json())
       .then(data => {
@@ -61,6 +59,9 @@ function App() {
       .catch(err => {
         console.error('Logout error:', err);
         showMessage('Logout failed', 'error');
+      })
+      .finally(() => {
+        hidePreloader();
       });
   };
   return (
@@ -109,7 +110,7 @@ function App() {
       )}
       {modalType === 'personalize' && (
         <Modal title='Perzonalization' onClose={() => setModalType(null)}>
-          <Personalization />
+          <Personalization onSave={() => setModalType(null)} />
         </Modal>
       )}
     </div>
