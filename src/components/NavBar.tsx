@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
-import { FaUserCircle } from 'react-icons/fa';
+import { FaUserCircle, FaSignOutAlt, FaSignInAlt, FaUserPlus, FaCog } from 'react-icons/fa';
+
 type NavBarType = {
   onLogin?: () => void;
   onLogout?: () => void;
@@ -7,6 +8,7 @@ type NavBarType = {
   onSignup?: () => void;
   isLoggedIn: boolean;
 };
+
 const Navbar = ({ onLogin, onLogout, onConfigure, onSignup, isLoggedIn }: NavBarType) => {
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -53,7 +55,7 @@ const Navbar = ({ onLogin, onLogout, onConfigure, onSignup, isLoggedIn }: NavBar
   };
 
   return (
-    <nav className='w-full text-green-900 bg-green-500 bg-opacity-50 backdrop-blur-md  px-6 py-3 flex justify-between items-center shadow-md'>
+    <nav className='w-full text-green-900 bg-green-500 bg-opacity-50 backdrop-blur-md px-6 py-3 flex justify-between items-center shadow-md'>
       <div className='w-1/3'></div>
 
       <h1 className='text-xl font-bold text-center w-1/3'>Nature Theme Vision Therapy</h1>
@@ -65,21 +67,34 @@ const Navbar = ({ onLogin, onLogout, onConfigure, onSignup, isLoggedIn }: NavBar
 
         {showDropdown && (
           <div
-            className='absolute right-0 mt-[2.5rem] bg-white text-black rounded shadow-lg z-10 w-40'
+            className='absolute right-0 mt-[2.5rem] bg-white text-black rounded shadow-lg z-10 w-48'
             onMouseLeave={handleMouseLeave}
             onMouseEnter={handleMouseEnter}
           >
-            <button className='block px-4 py-2 hover:bg-gray-100 w-full text-left' onClick={handleLoginToggle}>
-              {isLoggedIn ? 'Logout' : 'Login'}
-            </button>
-            {!isLoggedIn && (
-              <button className='block px-4 py-2 hover:bg-gray-100 w-full text-left' onClick={handleSignup}>
-                Sign Up
+            {isLoggedIn && (
+              <button
+                className='flex items-center gap-2 px-4 py-2 hover:bg-gray-100 w-full text-left'
+                onClick={handleConfigure}
+              >
+                <FaCog />
+                Personalize
               </button>
             )}
-            {isLoggedIn && (
-              <button className='block px-4 py-2 hover:bg-gray-100 w-full text-left' onClick={handleConfigure}>
-                Configure
+            <button
+              className='flex items-center gap-2 px-4 py-2 hover:bg-gray-100 w-full text-left'
+              onClick={handleLoginToggle}
+            >
+              {isLoggedIn ? <FaSignOutAlt /> : <FaSignInAlt />}
+              {isLoggedIn ? 'Logout' : 'Login'}
+            </button>
+
+            {!isLoggedIn && (
+              <button
+                className='flex items-center gap-2 px-4 py-2 hover:bg-gray-100 w-full text-left'
+                onClick={handleSignup}
+              >
+                <FaUserPlus />
+                Sign Up
               </button>
             )}
           </div>
