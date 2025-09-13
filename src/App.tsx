@@ -70,22 +70,7 @@ function App() {
   useEffect(() => {
     console.log('User:', user);
   }, [user]);
-  const handleLogout = () => {
-    showPreloader();
-    fetch('/api/logout', { method: 'POST' })
-      .then(res => res.json())
-      .then(data => {
-        showMessage(data.message || 'Logged out', data.status);
-        setIsLoggedIn(false);
-      })
-      .catch(err => {
-        console.error('Logout error:', err);
-        showMessage('Logout failed', 'error');
-      })
-      .finally(() => {
-        hidePreloader();
-      });
-  };
+
   return (
     <div
       className='min-h-screen flex flex-col items-center'
