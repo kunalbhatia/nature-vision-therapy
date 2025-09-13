@@ -27,4 +27,5 @@ pnpm-lock.yaml
 *.pub
 kunalbhatia
 .vercel
+.cache
 .vite
