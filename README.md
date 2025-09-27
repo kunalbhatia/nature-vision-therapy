@@ -24,19 +24,22 @@ A comprehensive React + TypeScript + Vite application for vision therapy through
 ### Installation
 
 1. **Clone the repository**
+
    ```bash
    git clone <repository-url>
    cd nature-theme-vision-therapy
    ```
 
 2. **Install dependencies**
+
    ```bash
    pnpm install
    ```
 
 3. **Environment Setup**
    Create a `.env` file with your configuration:
-   ```env
+
+```env
    MONGODB_URI=your_mongodb_connection_string
    JWT_SECRET=your_jwt_secret
    GOOGLE_AI_API_KEY=your_google_ai_api_key
@@ -77,7 +80,8 @@ All scripts are defined in `package.json` and can be run with `pnpm <script-name
 ## 🏗️ Project Architecture
 
 ### Frontend Structure
-```
+
+```bash
 src/
 ├── components/          # React components
 │   ├── Controls.tsx     # Font size and topic controls
@@ -105,7 +109,8 @@ src/
 ```
 
 ### Backend API Structure
-```
+
+```bash
 api/
 ├── get-characters-details.ts # Character data retrieval
 ├── login.ts                  # User authentication
@@ -119,6 +124,7 @@ api/
 ## 🛠️ Technology Stack
 
 ### Frontend
+
 - **React 19** - Latest React with concurrent features
 - **TypeScript** - Type-safe JavaScript
 - **Vite** - Fast build tool and development server
@@ -129,6 +135,7 @@ api/
 - **Zod** - Schema validation
 
 ### Backend & Services
+
 - **Vercel Functions** - Serverless API endpoints
 - **MongoDB** - Document database
 - **JWT** - Secure authentication tokens
@@ -136,6 +143,7 @@ api/
 - **Google Generative AI** - Story generation
 
 ### Development Tools
+
 - **ESLint** - Code linting
 - **TypeScript ESLint** - TypeScript-specific linting
 - **PostCSS** - CSS processing
@@ -144,26 +152,31 @@ api/
 ## 🚦 Development Workflow
 
 1. **Start Development**
+
    ```bash
    pnpm dev
    ```
 
 2. **Run with API Functions**
+
    ```bash
    pnpm dev:vercel
    ```
 
 3. **Lint Code**
+
    ```bash
    pnpm lint
    ```
 
 4. **Build for Production**
+
    ```bash
    pnpm build
    ```
 
 5. **Preview Build**
+
    ```bash
    pnpm preview
    ```
