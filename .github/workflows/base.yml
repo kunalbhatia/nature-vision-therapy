@@ -1,76 +1,76 @@
 name: CI
 
 on:
-  push:
-    branches: [development, main]
-  pull_request:
-    branches: [development, main]
+    push:
+        branches: [development, main]
+    pull_request:
+        branches: [development, main]
 
 jobs:
-  setup:
-    name: Install & Format Check
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+    setup:
+        name: Install & Format Check
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
 
-      - name: Setup PNPM
-        uses: pnpm/action-setup@v2
-        with:
-          version: 8
+            - name: Setup PNPM
+              uses: pnpm/action-setup@v2
+              with:
+                  version: 8
 
-      - name: Install dependencies
-        run: pnpm install
+            - name: Install dependencies
+              run: pnpm install --no-workspace-root
 
-      - name: Check formatting
-        run: pnpm exec pretty-quick --check
+            - name: Check formatting
+              run: pnpm exec pretty-quick --check
 
-  validate:
-    name: Lint & Test
-    needs: setup
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+    validate:
+        name: Lint & Test
+        needs: setup
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
 
-      - name: Setup PNPM
-        uses: pnpm/action-setup@v2
-        with:
-          version: 8
+            - name: Setup PNPM
+              uses: pnpm/action-setup@v2
+              with:
+                  version: 8
 
-      - name: Disable workspace mode
-        run: echo "node-linker=hoisted" >> .npmrc
+            - name: Disable workspace mode
+              run: echo "node-linker=hoisted" >> .npmrc
 
-      - name: Install dependencies
-        run: pnpm install
+            - name: Install dependencies
+              run: pnpm install
 
-      - name: Run ESLint
-        run: pnpm lint
+            - name: Run ESLint
+              run: pnpm lint
 
-      - name: Run Cypress Component Tests
-        run: pnpm cy:run:component
+            - name: Run Cypress Component Tests
+              run: pnpm cy:run:component
 
-      - name: Run Cypress E2E Tests
-        run: pnpm cy:run:e2e
+            - name: Run Cypress E2E Tests
+              run: pnpm cy:run:e2e
 
-  build:
-    name: Build Project
-    needs: validate
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+    build:
+        name: Build Project
+        needs: validate
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
 
-      - name: Setup PNPM
-        uses: pnpm/action-setup@v2
-        with:
-          version: 8
+            - name: Setup PNPM
+              uses: pnpm/action-setup@v2
+              with:
+                  version: 8
 
-      - name: Disable workspace mode
-        run: echo "node-linker=hoisted" >> .npmrc
+            - name: Disable workspace mode
+              run: echo "node-linker=hoisted" >> .npmrc
 
-      - name: Install dependencies
-        run: pnpm install
+            - name: Install dependencies
+              run: pnpm install
 
-      - name: Build
-        run: pnpm build
+            - name: Build
+              run: pnpm build
