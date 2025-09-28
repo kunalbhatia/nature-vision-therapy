@@ -28,6 +28,3 @@ kunalbhatia
 .vercel
 .cache
 .vite
-
-*.config.js
-*.config.ts
