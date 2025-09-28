@@ -53,7 +53,7 @@ jobs:
       - name: Start app server
         run: pnpm dev &
       - name: Wait for server to be ready
-        run: npx wait-on http://localhost:3000
+        run: npx wait-on http://localhost:4000
       - name: Run Cypress E2E
         run: pnpm cy:run:e2e
 
