@@ -1,3 +1,5 @@
+// src/components/Controls.tsx
+
 type ControlsProps = {
   readonly onTopicSelect: (topic: string) => void;
   readonly fontSize: number;
