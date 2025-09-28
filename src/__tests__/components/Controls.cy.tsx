@@ -1,5 +1,5 @@
 // src/components/Controls.cy.tsx
-import Controls from './Controls';
+import Controls from '../../components/Controls';
 import { mount } from '@cypress/react';
 
 describe('Controls Component', () => {

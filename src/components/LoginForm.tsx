@@ -47,6 +47,7 @@ const LoginForm = ({ onLogin, onStatusUpdate }: LoginFormType) => {
         <input
           {...register('email')}
           placeholder='Email'
+          data-testid='email-input'
           className='w-full px-4 py-2 border border-green-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 transition'
         />
         {errors.email && <p className='text-sm text-red-500'>{errors.email.message}</p>}
@@ -57,6 +58,7 @@ const LoginForm = ({ onLogin, onStatusUpdate }: LoginFormType) => {
           {...register('password')}
           type='password'
           placeholder='Password'
+          data-testid='password-input'
           className='w-full px-4 py-2 border border-green-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 transition'
         />
         {errors.password && <p className='text-sm text-red-500'>{errors.password.message}</p>}
@@ -64,6 +66,7 @@ const LoginForm = ({ onLogin, onStatusUpdate }: LoginFormType) => {
 
       <button
         type='submit'
+        data-testid='login-button'
         className='w-full py-2 bg-green-600 text-white font-medium rounded-md hover:bg-green-700 transition'
       >
         Login
