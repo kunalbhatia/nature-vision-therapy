@@ -189,6 +189,35 @@ The application is configured for deployment on Vercel:
 - **Vercel Config** - Project configuration (`vercel.json`)
 - **Environment Variables** - Set in Vercel dashboard
 
+## 🧪 Testing
+
+This project uses Cypress for comprehensive component and end-to-end testing. To learn about setting up and writing test cases, refer to our detailed testing guide:
+
+**[📋 Cypress Testing Setup Guide](./cypress_setup_guide.md)**
+
+The testing guide covers:
+
+- Component testing configuration
+- End-to-end testing setup
+- Writing effective test specs
+- Best practices and common patterns
+
+### Quick Test Commands
+
+```bash
+# Open Cypress test runner
+npx cypress open
+
+# Run tests headlessly
+npx cypress run
+
+# Run only component tests
+npx cypress run --component
+
+# Run only E2E tests
+npx cypress run --e2e
+```
+
 ## 📄 License
 
 MIT License - see [LICENSE](LICENSE) file for details.
