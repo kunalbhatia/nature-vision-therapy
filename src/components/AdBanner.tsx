@@ -30,7 +30,7 @@ const AdBanner = ({ isVisible = true }: { isVisible: boolean }) => {
           maxWidth: "728px",
           maxHeight: "90px",
         }}
-        data-ad-client="ca-pub-0307759569583387"
+        data-ad-client="ca-pub-4125611853366209"
         data-ad-slot="1234567890" // replace with your AdSense slot ID
         data-ad-format="auto"
         data-full-width-responsive="true"
