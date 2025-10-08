@@ -30,6 +30,7 @@ function Controls({ onTopicSelect, fontSize, setFontSize }: ControlsProps) {
       <div className="flex space-x-4">
         <div className="tooltip" data-tip="Decrease font size">
           <button
+            data-testid="decrease-font-button"
             onClick={() => setFontSize(Math.max(1.2, fontSize - 0.2))}
             className="bg-emerald-500 hover:bg-emerald-400 text-green-900 font-bold py-2 px-4 rounded-full"
           >
@@ -38,6 +39,7 @@ function Controls({ onTopicSelect, fontSize, setFontSize }: ControlsProps) {
         </div>
         <div className="tooltip" data-tip="Increase font size">
           <button
+            data-testid="increase-font-button"
             onClick={() => setFontSize(fontSize + 0.2)}
             className="bg-emerald-500 hover:bg-emerald-400 text-green-900 font-bold py-2 px-4 rounded-full"
           >
@@ -47,6 +49,7 @@ function Controls({ onTopicSelect, fontSize, setFontSize }: ControlsProps) {
 
         <div className="tooltip" data-tip="Toggle fullscreen">
           <button
+            data-testid="fullscreen-button"
             onClick={toggleFullscreen}
             className="bg-emerald-500 hover:bg-emerald-400 text-green-900 font-bold py-2 px-4 rounded-full"
           >
@@ -56,6 +59,7 @@ function Controls({ onTopicSelect, fontSize, setFontSize }: ControlsProps) {
       </div>
       <div className="flex space-x-4">
         <select
+          data-testid="topic-select"
           onChange={(e) => {
             if (e.target.value) {
               onTopicSelect(e.target.value);
@@ -63,9 +67,12 @@ function Controls({ onTopicSelect, fontSize, setFontSize }: ControlsProps) {
           }}
           className="bg-emerald-500 hover:bg-emerald-400 text-green-900 font-bold py-2 px-4 rounded-lg"
         >
-          <option value="">Select a story topic</option>
+          <option data-testid="default-option" value="">
+            Select a story topic
+          </option>
           {storyTopics.map((story) => (
             <option
+              data-testid={`option-${story.toLocaleLowerCase()}`}
               key={story.toLocaleLowerCase()}
               value={story.toLocaleLowerCase()}
             >
