@@ -159,7 +159,12 @@ const Personalization = ({ onSave }: { onSave: () => void }) => {
 
   return (
     <div className="p-6 bg-white rounded-lg shadow-md max-w-xl mx-auto">
-      <h2 className="text-xl font-semibold mb-4">Personalization</h2>
+      <h2
+        data-testid="personalization-title"
+        className="text-xl font-semibold mb-4"
+      >
+        Personalization
+      </h2>
       <p className="mb-4 text-gray-600">
         Enter names and birth years for each character:
       </p>
@@ -175,6 +180,7 @@ const Personalization = ({ onSave }: { onSave: () => void }) => {
               <input
                 type="text"
                 placeholder="Name"
+                data-testid={`name-${key}`}
                 value={formData[key]?.name || ""}
                 onChange={(e) => handleChange(key, "name", e.target.value)}
                 className="border px-2 py-1 rounded"
@@ -183,6 +189,7 @@ const Personalization = ({ onSave }: { onSave: () => void }) => {
               <input
                 type="number"
                 placeholder="Birth Year"
+                data-testid={`birthYear-${key}`}
                 value={formData[key]?.birthYear || ""}
                 onChange={(e) => handleChange(key, "birthYear", e.target.value)}
                 className="border px-2 py-1 rounded"
@@ -191,6 +198,7 @@ const Personalization = ({ onSave }: { onSave: () => void }) => {
               {key === "me" || key.startsWith("custom_") ? (
                 <select
                   value={formData[key]?.gender || ""}
+                  data-testid={`gender-${key}`}
                   onChange={(e) => handleChange(key, "gender", e.target.value)}
                   className="border px-2 py-1 rounded"
                 >
@@ -217,11 +225,13 @@ const Personalization = ({ onSave }: { onSave: () => void }) => {
         <input
           type="text"
           placeholder="Add another character (e.g. best friend)"
+          data-testid="add-character-input"
           value={newLabel}
           onChange={(e) => setNewLabel(e.target.value)}
           className="border px-3 py-2 rounded w-full"
         />
         <button
+          data-testid="add-character-button"
           onClick={handleAddCharacter}
           className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-500"
         >
@@ -230,6 +240,7 @@ const Personalization = ({ onSave }: { onSave: () => void }) => {
       </div>
 
       <button
+        data-testid="save-details-button"
         onClick={handleSubmit}
         className="mt-6 w-full bg-green-600 text-white py-2 rounded hover:bg-green-500"
       >
