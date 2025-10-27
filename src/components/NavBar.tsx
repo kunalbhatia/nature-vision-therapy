@@ -70,7 +70,7 @@ const Navbar = ({
   };
 
   return (
-    <nav className="w-full text-green-900 bg-green-500 bg-opacity-50 backdrop-blur-md px-6 py-3 flex justify-between items-center shadow-md">
+    <nav className="w-full text-green-900 bg-green-500 bg-opacity-50 backdrop-blur-md px-6 py-3 flex justify-between items-center shadow-md relative z-50">
       <div className="w-1/3"></div>
 
       <h1 className="text-xl font-bold text-center w-1/3">
@@ -84,7 +84,7 @@ const Navbar = ({
 
         {showDropdown && (
           <div
-            className="absolute right-0 mt-[2.5rem] bg-white text-black rounded shadow-lg z-50 w-48"
+            className="absolute right-0 mt-[2.5rem] bg-white text-black rounded shadow-lg z-[9999] w-48"
             onMouseLeave={handleMouseLeave}
             onMouseEnter={handleMouseEnter}
           >
