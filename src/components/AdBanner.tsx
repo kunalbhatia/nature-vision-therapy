@@ -1,5 +1,4 @@
-// src/components/AdBanner.tsx
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 declare global {
   interface Window {
@@ -8,18 +7,21 @@ declare global {
 }
 
 const AdBanner = ({ isVisible = true }: { isVisible: boolean }) => {
-  useEffect(() => {
-    try {
-      if (!window.adsbygoogle) {
-        window.adsbygoogle = [];
-      }
+  const adInitialized = useRef(false);
 
-      window.adsbygoogle.push({});
-    } catch (e) {
-      console.error("Adsense error", e);
+  useEffect(() => {
+    if (!adInitialized.current) {
+      try {
+        (window.adsbygoogle = window.adsbygoogle || []).push({});
+        adInitialized.current = true;
+      } catch (e) {
+        console.error("Adsense error", e);
+      }
     }
   }, []);
+
   if (!isVisible) return null;
+
   return (
     <div className="fixed bottom-8 left-0 right-0 flex justify-center z-50">
       <ins
@@ -31,7 +33,7 @@ const AdBanner = ({ isVisible = true }: { isVisible: boolean }) => {
           maxHeight: "90px",
         }}
         data-ad-client="ca-pub-4125611853366209"
-        data-ad-slot="1234567890" // replace with your AdSense slot ID
+        data-ad-slot="1234567890"
         data-ad-format="auto"
         data-full-width-responsive="true"
       ></ins>
