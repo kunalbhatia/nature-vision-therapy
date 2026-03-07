@@ -56,9 +56,8 @@ export default async function StoryGenerator({ topic }: StoryGeneratorType) {
 
     const prompt = `
 ${basePrompt.trim()}
-The hero is always ${hero.name} (a brave ${hero.gender ?? 'child'}, born ${
-      hero.birthYear
-    }), and characters can only be chosen from the list below.
+The hero is always ${hero.name} (a brave ${hero.gender ?? 'child'}, born ${hero.birthYear
+      }), and characters can only be chosen from the list below.
 Characters:
 ${formattedCharacters}
   `.trim();
@@ -67,7 +66,8 @@ ${formattedCharacters}
   }
 
   const genAI = new GoogleGenerativeAI(import.meta.env.VITE_GEMINI_API_KEY);
-  const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' });
+
+  const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash-lite' });
 
   const basePrompt = `Write a short ${topic.toLowerCase()} for kids in plain text (no title), inspired by Indian culture. The story should be engaging, simple, and suitable for children aged 5-18, in a friendly and encouraging tone. Avoid complex words and phrases.`;
   let finalPrompt: string | null = null;
@@ -77,14 +77,40 @@ ${formattedCharacters}
     finalPrompt = `Write a short ${topic.toLowerCase()} for kids in plain text (no title), inspired by Indian culture. The hero is always Jhalak (a brave girl), and characters can only be chosen from the list below. The story should be engaging, simple, and suitable for children aged 5-18, in a friendly and encouraging tone. \n${characterDetails}`;
   }
 
-  const result = await model.generateContent({
-    contents: [
-      {
-        role: 'user',
-        parts: [{ text: finalPrompt }],
-      },
-    ],
-  });
+  const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+  let result;
+  let maxRetries = 3;
+  let attempt = 0;
+
+  while (attempt < maxRetries) {
+    try {
+      result = await model.generateContent({
+        contents: [
+          {
+            role: 'user',
+            parts: [{ text: finalPrompt }],
+          },
+        ],
+      });
+      break;
+    } catch (error: any) {
+      attempt++;
+      if (error?.message?.includes('429')) {
+        if (attempt >= maxRetries) {
+          throw new Error('Too many requests. Please wait a moment and try again.');
+        }
+        console.warn(`Rate limit hit (429). Retrying in 4 seconds... (Attempt ${attempt}/${maxRetries - 1})`);
+        await delay(4000);
+      } else {
+        throw error;
+      }
+    }
+  }
+
+  if (!result) {
+    throw new Error('Failed to generate story.');
+  }
 
   return result.response.text();
 }

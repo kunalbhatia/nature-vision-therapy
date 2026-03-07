@@ -38,9 +38,10 @@ function App() {
       .then((story) => {
         setSelectedStory({ content: story });
       })
-      .catch((error) => {
+      .catch((error: unknown) => {
         console.error("Error generating story:", error);
-        setSelectedStory({ content: "Failed to generate story." });
+        const errorMessage = error instanceof Error ? error.message : "Failed to generate story.";
+        setSelectedStory({ content: errorMessage });
       })
       .finally(() => {
         setIsLoading(false);
