@@ -80,7 +80,7 @@ ${formattedCharacters}
   const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
   let result;
-  let maxRetries = 3;
+  const maxRetries = 3;
   let attempt = 0;
 
   while (attempt < maxRetries) {
@@ -94,9 +94,10 @@ ${formattedCharacters}
         ],
       });
       break;
-    } catch (error: any) {
+    } catch (error: unknown) {
       attempt++;
-      if (error?.message?.includes('429')) {
+      const isRateLimitError = error instanceof Error && error.message.includes('429');
+      if (isRateLimitError) {
         if (attempt >= maxRetries) {
           throw new Error('Too many requests. Please wait a moment and try again.');
         }
