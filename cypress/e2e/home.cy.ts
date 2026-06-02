@@ -2,6 +2,6 @@
 describe("Home Page", () => {
   it("loads and shows the title", () => {
     cy.visit("/");
-    cy.contains("Select a story topic").should("exist");
+    cy.contains("Welcome to Nature Vision Therapy").should("exist");
   });
 });
