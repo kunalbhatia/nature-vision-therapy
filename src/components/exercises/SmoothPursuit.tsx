@@ -127,7 +127,7 @@ export default function SmoothPursuit({ onComplete }: SmoothPursuitProps) {
         <div className="bg-orange-50 p-6 rounded-3xl border border-orange-100">
           <h4 className="font-bold text-orange-800 mb-2">Pro Tip</h4>
           <p className="text-sm text-orange-700 leading-relaxed">
-            Try to keep your eyes locked on the butterfly's body. If it gets too fast, lower the speed using the slider above.
+            Try to keep your eyes locked on the butterfly&apos;s body. If it gets too fast, lower the speed using the slider above.
           </p>
         </div>
       </div>

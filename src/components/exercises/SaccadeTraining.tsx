@@ -157,7 +157,7 @@ export default function SaccadeTraining({ onComplete }: SaccadeTrainingProps) {
         <div className="bg-gray-900 p-6 rounded-3xl border border-gray-800">
           <h4 className="font-bold text-orange-400 mb-2">Red-Blue Fusion</h4>
           <p className="text-sm text-gray-400 leading-relaxed">
-            By using two permanent targets in different color channels, we force both eyes to stay "on" while jumping between them.
+            By using two permanent targets in different color channels, we force both eyes to stay &quot;on&quot; while jumping between them.
           </p>
         </div>
         <div className="bg-gray-900 p-6 rounded-3xl border border-gray-800">
