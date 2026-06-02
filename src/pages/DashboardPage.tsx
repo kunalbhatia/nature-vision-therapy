@@ -1,0 +1,47 @@
+import { Link, Outlet, useLocation } from "react-router-dom";
+import ChildDashboard from "../components/dashboard/ChildDashboard";
+import ParentDashboard from "../components/dashboard/ParentDashboard";
+
+export default function DashboardPage() {
+  const location = useLocation();
+  const isBaseDashboard = location.pathname === "/dashboard";
+
+  return (
+    <div className="w-full max-w-6xl p-6 bg-white/95 rounded-xl shadow-xl min-h-[80vh]">
+      <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
+        <h1 className="text-4xl font-black text-green-900 tracking-tight">Vision Progress</h1>
+        <div className="flex bg-gray-100 p-1 rounded-2xl">
+          <Link 
+            to="/dashboard/child" 
+            className={`px-6 py-2 rounded-xl font-bold transition-all ${location.pathname.includes('/child') ? 'bg-white text-green-600 shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}
+          >
+            Child View
+          </Link>
+          <Link 
+            to="/dashboard/parent" 
+            className={`px-6 py-2 rounded-xl font-bold transition-all ${location.pathname.includes('/parent') ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}
+          >
+            Parent View
+          </Link>
+        </div>
+      </div>
+
+      {isBaseDashboard ? (
+        <div className="flex flex-col items-center justify-center py-20 text-center">
+          <div className="text-6xl mb-6">🔭</div>
+          <h2 className="text-3xl font-bold text-gray-800 mb-4">Choose your perspective</h2>
+          <p className="text-gray-600 max-w-md text-lg">
+            Are you tracking your own super-vision powers, or reviewing clinical progress?
+          </p>
+        </div>
+      ) : (
+        <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+          <Outlet />
+        </div>
+      )}
+    </div>
+  );
+}
+
+export { ChildDashboard, ParentDashboard };
+

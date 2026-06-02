@@ -1,8 +1,5 @@
 import { useEffect, useState } from "react";
-import StoryDisplay from "./components/StoryDisplay";
-import Controls from "./components/Controls";
-import StoryGenerator from "./components/StoryGenerator";
-
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import "./index.css";
 import Navbar from "./components/NavBar";
 import Modal from "./components/Modal";
@@ -14,6 +11,19 @@ import Personalization from "./components/Personalization";
 import { usePreloader } from "./hooks/Preloader";
 import AdBanner from "./components/AdBanner";
 
+// Pages
+import HomePage from "./pages/HomePage";
+import StoriesPage from "./pages/StoriesPage";
+import DashboardPage, { ChildDashboard, ParentDashboard } from "./pages/DashboardPage";
+import TherapyPage, { 
+  PatchingTimerPage, 
+  AnaglyphGamesPage, 
+  MonocularExercisesPage, 
+  PursuitExercisesPage, 
+  SaccadeTrainingPage 
+} from "./pages/TherapyPage";
+import SettingsPage from "./pages/SettingsPage";
+
 function App() {
   const { showMessage } = useSnackbar();
   const { isLoggedIn: isAuthenticated, user } = useAuthStatus();
@@ -22,37 +32,18 @@ function App() {
     "login" | "signup" | "personalize" | null
   >(null);
 
-  const [fontSize, setFontSize] = useState(1.5);
-
-  const [selectedStory, setSelectedStory] = useState<{
-    content: string;
-  } | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(isAuthenticated);
 
-  const handleTopicSelect = (topic: string) => {
-    setIsLoading(true);
-    setSelectedStory(null);
-    showPreloader();
-    StoryGenerator({ topic })
-      .then((story) => {
-        setSelectedStory({ content: story });
-      })
-      .catch((error) => {
-        console.error("Error generating story:", error);
-        setSelectedStory({ content: "Failed to generate story." });
-      })
-      .finally(() => {
-        setIsLoading(false);
-        hidePreloader();
-      });
-  };
   useEffect(() => {
     setIsLoggedIn(isAuthenticated);
   }, [isAuthenticated]);
+
   useEffect(() => {
-    console.log("User:", user);
+    if (user) {
+      console.log("User:", user);
+    }
   }, [user]);
+
   const handleLogout = () => {
     showPreloader();
     fetch("/api/logout", { method: "POST" })
@@ -69,69 +60,79 @@ function App() {
         hidePreloader();
       });
   };
-  useEffect(() => {
-    setIsLoggedIn(isAuthenticated);
-  }, [isAuthenticated]);
-  useEffect(() => {
-    console.log("User:", user);
-  }, [user]);
 
   return (
-    <div
-      className="min-h-screen flex flex-col items-center"
-      style={{
-        backgroundImage: "url(./trees.png)",
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-      }}
-    >
-      <Navbar
-        onLogin={() => setModalType("login")}
-        onLogout={handleLogout}
-        onConfigure={() => setModalType("personalize")}
-        onSignup={() => setModalType("signup")}
-        isLoggedIn={isLoggedIn}
-      />
-      <div className="mt-4 w-[98%] min-h-fit bg-black text-white flex flex-col items-center justify-start p-6 shadow-lg rounded-md">
-        <Controls
-          onTopicSelect={handleTopicSelect}
-          fontSize={fontSize}
-          setFontSize={setFontSize}
+    <BrowserRouter>
+      <div
+        className="min-h-screen flex flex-col items-center"
+        style={{
+          backgroundImage: "url(/trees.png)",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundAttachment: "fixed",
+        }}
+      >
+        <Navbar
+          onLogin={() => setModalType("login")}
+          onLogout={handleLogout}
+          onConfigure={() => setModalType("personalize")}
+          onSignup={() => setModalType("signup")}
+          isLoggedIn={isLoggedIn}
         />
-        <StoryDisplay
-          isLoading={isLoading}
-          story={selectedStory ? { content: selectedStory.content } : null}
-          fontSize={fontSize}
-        />
-      </div>
+        
+        <main className="flex-1 w-full flex flex-col items-center p-4">
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/stories" element={<StoriesPage />} />
+            
+            <Route path="/dashboard" element={<DashboardPage />}>
+              <Route path="child" element={<ChildDashboard />} />
+              <Route path="parent" element={<ParentDashboard />} />
+            </Route>
 
-      {modalType === "login" && (
-        <Modal title="Login" onClose={() => setModalType(null)}>
-          <LoginForm
-            onLogin={() => setModalType(null)}
-            onStatusUpdate={(message, status) => {
-              if (status === "success") setIsLoggedIn(true);
-              showMessage(message, status);
-            }}
-          />
-        </Modal>
-      )}
-      {modalType === "signup" && (
-        <Modal title="Sign Up" onClose={() => setModalType(null)}>
-          <SignupForm
-            onSignup={() => setModalType(null)}
-            onStatusUpdate={(message, status) => showMessage(message, status)}
-          />
-        </Modal>
-      )}
-      {modalType === "personalize" && (
-        <Modal title="Perzonalization" onClose={() => setModalType(null)}>
-          <Personalization onSave={() => setModalType(null)} />
-        </Modal>
-      )}
-      <AdBanner isVisible={false} />
-    </div>
+            <Route path="/therapy" element={<TherapyPage />}>
+              <Route path="patching" element={<PatchingTimerPage />} />
+              <Route path="anaglyph" element={<AnaglyphGamesPage />} />
+              <Route path="monocular" element={<MonocularExercisesPage />} />
+              <Route path="pursuit" element={<PursuitExercisesPage />} />
+              <Route path="saccade" element={<SaccadeTrainingPage />} />
+            </Route>
+
+            <Route path="/settings" element={<SettingsPage />} />
+            
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </main>
+
+        {modalType === "login" && (
+          <Modal title="Login" onClose={() => setModalType(null)}>
+            <LoginForm
+              onLogin={() => setModalType(null)}
+              onStatusUpdate={(message, status) => {
+                if (status === "success") setIsLoggedIn(true);
+                showMessage(message, status);
+              }}
+            />
+          </Modal>
+        )}
+        {modalType === "signup" && (
+          <Modal title="Sign Up" onClose={() => setModalType(null)}>
+            <SignupForm
+              onSignup={() => setModalType(null)}
+              onStatusUpdate={(message, status) => showMessage(message, status)}
+            />
+          </Modal>
+        )}
+        {modalType === "personalize" && (
+          <Modal title="Personalization" onClose={() => setModalType(null)}>
+            <Personalization onSave={() => setModalType(null)} />
+          </Modal>
+        )}
+        <AdBanner isVisible={false} />
+      </div>
+    </BrowserRouter>
   );
 }
 
 export default App;
+
