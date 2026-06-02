@@ -12,34 +12,44 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'POST') return res.status(405).end();
 
   const { email, password } = req.body;
+  const client = new MongoClient(uri);
 
   try {
     await client.connect();
     const db = client.db('vision_therapy');
     const user = await db.collection('users').findOne({ email });
 
-    if (!user) return res.status(401).json({ message: 'User not found', status: 'error' });
+    if (!user) {
+      await client.close();
+      return res.status(401).json({ message: 'User not found', status: 'error' });
+    }
 
     const isValid = await bcrypt.compare(password, user.password);
-    if (!isValid) return res.status(401).json({ message: 'Invalid password', status: 'error' });
+    if (!isValid) {
+      await client.close();
+      return res.status(401).json({ message: 'Invalid password', status: 'error' });
+    }
 
     const token = jwt.sign({ email: user.email, id: user._id.toString() }, JWT_SECRET, { expiresIn: '1h' });
     res.setHeader(
       'Set-Cookie',
       cookie.serialize('token', token, {
         httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
+        secure: true, // Always true for Vercel
         sameSite: 'strict',
         path: '/',
-        maxAge: 15 * 60, // 15 minutes
+        maxAge: 60 * 60 * 24, // 1 hour
       })
     );
 
-    return res.status(200).json({ token, message: 'Login successful', status: 'success' });
-  } catch (err) {
-    console.error('Login error:', err);
-    return res.status(500).json({ message: err instanceof Error ? err.message : 'Server error', status: 'error' });
-  } finally {
     await client.close();
+    return res.status(200).json({ token, message: 'Login successful', status: 'success' });
+  } catch (err: any) {
+    console.error('Login error:', err);
+    if (client) await client.close();
+    return res.status(500).json({ 
+      message: err?.message || 'Database connection error', 
+      status: 'error' 
+    });
   }
 }
