@@ -58,19 +58,19 @@ const Navbar = ({ onLogin, onLogout, onConfigure, onSignup, isLoggedIn }: NavBar
   return (
     <nav className='w-full text-green-900 bg-green-500 bg-opacity-50 backdrop-blur-md px-6 py-3 flex justify-between items-center shadow-md sticky top-0 z-50'>
       <div className='flex items-center gap-4 w-1/3'>
-        <Link to="/" className='flex items-center gap-2 font-semibold hover:text-green-700 transition-colors'>
+        <Link to="/" className='flex items-center gap-2 font-semibold text-green-900 hover:text-green-950 transition-colors'>
           <FaHome />
           <span className='hidden md:inline'>Home</span>
         </Link>
-        <Link to="/stories" className='flex items-center gap-2 font-semibold hover:text-green-700 transition-colors'>
+        <Link to="/stories" className='flex items-center gap-2 font-semibold text-green-900 hover:text-green-950 transition-colors'>
           <FaBook />
           <span className='hidden md:inline'>Stories</span>
         </Link>
-        <Link to="/therapy" className='flex items-center gap-2 font-semibold hover:text-green-700 transition-colors'>
+        <Link to="/therapy" className='flex items-center gap-2 font-semibold text-green-900 hover:text-green-950 transition-colors'>
           <FaHeartbeat />
           <span className='hidden md:inline'>Therapy</span>
         </Link>
-        <Link to="/dashboard" className='flex items-center gap-2 font-semibold hover:text-green-700 transition-colors'>
+        <Link to="/dashboard" className='flex items-center gap-2 font-semibold text-green-900 hover:text-green-950 transition-colors'>
           <FaChartLine />
           <span className='hidden md:inline'>Dashboard</span>
         </Link>
@@ -80,7 +80,7 @@ const Navbar = ({ onLogin, onLogout, onConfigure, onSignup, isLoggedIn }: NavBar
 
       <div className='w-1/3 flex justify-end relative' ref={dropdownRef}>
         <button onClick={() => setShowDropdown(prev => !prev)} className='focus:outline-none'>
-          <FaUserCircle className='text-3xl cursor-pointer hover:text-green-700 transition-colors' />
+          <FaUserCircle className='text-3xl cursor-pointer hover:text-green-950 transition-colors' />
         </button>
 
         {showDropdown && (
