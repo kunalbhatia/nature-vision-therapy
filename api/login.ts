@@ -11,7 +11,7 @@ const JWT_SECRET = process.env.JWT_SECRET!;
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'POST') return res.status(405).end();
 
-  const { email, password } = JSON.parse(req.body);
+  const { email, password } = req.body;
 
   try {
     await client.connect();
@@ -23,7 +23,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const isValid = await bcrypt.compare(password, user.password);
     if (!isValid) return res.status(401).json({ message: 'Invalid password', status: 'error' });
 
-    const token = jwt.sign({ email: user.email, id: user._id }, JWT_SECRET, { expiresIn: '1h' });
+    const token = jwt.sign({ email: user.email, id: user._id.toString() }, JWT_SECRET, { expiresIn: '1h' });
     res.setHeader(
       'Set-Cookie',
       cookie.serialize('token', token, {

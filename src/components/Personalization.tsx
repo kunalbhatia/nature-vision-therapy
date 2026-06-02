@@ -36,6 +36,14 @@ const Personalization = ({ onSave }: { onSave: () => void }) => {
           credentials: "include",
         });
         if (!res.ok) return;
+        
+        const contentType = res.headers.get("content-type");
+        if (!contentType || !contentType.includes("application/json")) {
+          const text = await res.text();
+          console.error("Expected JSON but received:", contentType, text.slice(0, 100));
+          throw new Error("API returned non-JSON response. Ensure you are running with 'pnpm dev:vercel'.");
+        }
+
         const { characterDetails } = await res.json();
 
         if (characterDetails) {
