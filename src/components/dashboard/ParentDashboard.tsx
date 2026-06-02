@@ -13,9 +13,9 @@ export default function ParentDashboard() {
   const [history, setHistory] = useState<Session[]>([]);
 
   useEffect(() => {
-    fetch('/api/get-patching-history') // Need to update this to get ALL history or a new API
+    fetch('/api/get-all-sessions')
       .then(res => res.json())
-      .then(data => setHistory(data.history))
+      .then(data => setHistory(data.history || []))
       .catch(err => console.error('Failed to fetch history:', err));
   }, []);
 
@@ -44,7 +44,7 @@ export default function ParentDashboard() {
         <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
           <h4 className="text-sm font-bold text-gray-400 uppercase tracking-wider mb-2">Last Active</h4>
           <span className="text-xl font-bold text-gray-700">
-            {history[0] ? new Date(history[0].date).toLocaleDateString() : 'Never'}
+            {history[0] ? new Date(history[0].completedAt).toLocaleDateString() : 'Never'}
           </span>
         </div>
       </div>
@@ -69,7 +69,13 @@ export default function ParentDashboard() {
             <tbody>
               {history.map((session, i) => (
                 <tr key={i} className="hover:bg-gray-50 transition-colors">
-                  <td className="font-medium text-gray-600">{new Date(session.date).toLocaleDateString()}</td>
+                  <td className="font-medium text-gray-600">
+                    {new Date(session.completedAt).toLocaleDateString(undefined, { 
+                      month: 'short', 
+                      day: 'numeric',
+                      year: 'numeric'
+                    })}
+                  </td>
                   <td className="capitalize font-semibold text-gray-800">
                     {session.sessionType.replace('_', ' ')}
                   </td>

@@ -16,14 +16,38 @@ interface ProgressSummary {
 export default function ChildDashboard() {
   const [summary, setSummary] = useState<ProgressSummary | null>(null);
 
+  const [error, setError] = useState<string | null>(null);
+
   useEffect(() => {
     fetch('/api/get-progress-summary')
-      .then(res => res.json())
-      .then(data => setSummary(data))
-      .catch(err => console.error('Failed to fetch summary:', err));
+      .then(res => {
+        if (!res.ok) throw new Error('Failed to fetch summary');
+        return res.json();
+      })
+      .then(data => {
+        if (data.error) throw new Error(data.error);
+        setSummary(data);
+      })
+      .catch(err => {
+        console.error('Failed to fetch summary:', err);
+        setError(err.message);
+      });
   }, []);
 
-  if (!summary) return <div className="p-8 text-center">Loading your progress...</div>;
+  if (error) return (
+    <div className="p-8 text-center bg-red-50 rounded-3xl border-2 border-red-100">
+      <h3 className="text-xl font-bold text-red-800 mb-2">Oops! Something went wrong.</h3>
+      <p className="text-red-600">{error}</p>
+      <button onClick={() => window.location.reload()} className="btn btn-error mt-4 text-white rounded-xl px-8">Try Again</button>
+    </div>
+  );
+
+  if (!summary) return (
+    <div className="flex flex-col items-center justify-center p-20 gap-4">
+      <div className="loading loading-spinner loading-lg text-green-500"></div>
+      <p className="text-gray-500 font-medium animate-pulse">Summoning your vision powers...</p>
+    </div>
+  );
 
   return (
     <div className="flex flex-col gap-8 w-full">

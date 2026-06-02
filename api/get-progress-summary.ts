@@ -59,10 +59,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     // Weekly stats
     const sevenDaysAgo = new Date();
     sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
-    const weeklySessions = allSessions.filter(s => new Date(s.completedAt) >= sevenDaysAgo);
+    const weeklySessions = allSessions.filter(s => {
+      if (!s.completedAt) return false;
+      const completedDate = new Date(s.completedAt);
+      return !isNaN(completedDate.getTime()) && completedDate >= sevenDaysAgo;
+    });
 
     return res.status(200).json({
-      childName: user?.childName || 'Little Hero',
+      childName: user?.childName || user?.characterDetails?.me?.name || 'Little Hero',
       totalXP,
       exercisesCompleted,
       streak,
