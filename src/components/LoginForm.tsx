@@ -32,6 +32,7 @@ const LoginForm = ({ onLogin, onStatusUpdate }: LoginFormType) => {
     showPreloader();
     const res = await fetch("/api/login", {
       method: "POST",
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
     });
     const result = await res.json();
