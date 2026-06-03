@@ -21,6 +21,7 @@ export default function AnaglyphBubblePop() {
   const requestRef = useRef<number>(null);
   const lastSpawnTime = useRef<number>(0);
   const nextId = useRef<number>(0);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   const spawnBubble = useCallback(() => {
     const types: ('red' | 'cyan' | 'golden')[] = ['red', 'cyan', 'red', 'cyan', 'golden'];
@@ -96,6 +97,9 @@ export default function AnaglyphBubblePop() {
   };
 
   const startGame = () => {
+    if (containerRef.current) {
+      containerRef.current.requestFullscreen().catch(() => {});
+    }
     setScore(0);
     setTimeLeft(60);
     setBubbles([]);
@@ -104,7 +108,7 @@ export default function AnaglyphBubblePop() {
   };
 
   return (
-    <div className="w-full max-w-4xl flex flex-col items-center">
+    <div className="w-full max-w-4xl flex flex-col items-center" ref={containerRef}>
       <div className="w-full flex justify-between items-center mb-4 px-4">
         <div className="text-2xl font-bold text-green-800">Score: {score}</div>
         <div className="text-2xl font-bold text-blue-800">Time: {timeLeft}s</div>

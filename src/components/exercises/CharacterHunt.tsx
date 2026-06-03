@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useSnackbar } from '../../hooks/Snackbar';
 import AnaglyphWrapper, { RedEye, CyanEye } from '../games/AnaglyphWrapper';
 
@@ -18,6 +18,7 @@ export default function CharacterHunt({ onComplete }: CharacterHuntProps) {
   const [score, setScore] = useState(0);
   const [timeLeft, setTimeLeft] = useState(60);
   const [isActive, setIsActive] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
   
   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
 
@@ -83,6 +84,9 @@ export default function CharacterHunt({ onComplete }: CharacterHuntProps) {
   };
 
   const startExercise = () => {
+    if (containerRef.current) {
+      containerRef.current.requestFullscreen().catch(() => {});
+    }
     setScore(0);
     setTimeLeft(60);
     setIsActive(true);
@@ -90,7 +94,7 @@ export default function CharacterHunt({ onComplete }: CharacterHuntProps) {
   };
 
   return (
-    <div className="flex flex-col items-center w-full max-w-4xl">
+    <div className="flex flex-col items-center w-full max-w-4xl" ref={containerRef}>
       <div className="w-full flex justify-between items-center mb-6 px-4">
         <h2 className="text-2xl font-bold text-purple-800">Anaglyph Character Hunt</h2>
         <div className="flex gap-8 text-xl font-bold">

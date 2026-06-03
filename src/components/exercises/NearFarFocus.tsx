@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useSnackbar } from '../../hooks/Snackbar';
 
 interface NearFarFocusProps {
@@ -11,6 +11,7 @@ export default function NearFarFocus({ onComplete }: NearFarFocusProps) {
   const [direction, setDirection] = useState<'near' | 'far'>('far');
   const [isActive, setIsActive] = useState(false);
   const [timeLeft, setTimeLeft] = useState(60);
+  const containerRef = useRef<HTMLDivElement>(null);
   
   const words = ['VISION', 'POWER', 'EYES', 'FOCUS', 'SUPER', 'HEALTH', 'BRAVE', 'NATURE'];
   const [currentWord, setCurrentWord] = useState(words[0]);
@@ -68,8 +69,17 @@ export default function NearFarFocus({ onComplete }: NearFarFocusProps) {
     }
   };
 
+  const startExercise = () => {
+    if (containerRef.current) {
+      containerRef.current.requestFullscreen().catch(() => {});
+    }
+    setIsActive(true);
+    setTimeLeft(60);
+    setSize(10);
+  };
+
   return (
-    <div className="flex flex-col items-center w-full max-w-4xl">
+    <div className="flex flex-col items-center w-full max-w-4xl" ref={containerRef}>
       <div className="w-full flex justify-between items-center mb-6 px-4">
         <h2 className="text-2xl font-bold text-blue-800">Near-Far Focus</h2>
         <span className="text-xl font-bold text-orange-600">Time: {timeLeft}s</span>
@@ -84,7 +94,7 @@ export default function NearFarFocus({ onComplete }: NearFarFocusProps) {
               <span className="font-bold text-yellow-400">Keep it in clear focus!</span>
             </p>
             <button 
-              onClick={() => { setIsActive(true); setTimeLeft(60); setSize(10); }} 
+              onClick={startExercise} 
               className="btn btn-primary btn-lg px-12 rounded-2xl shadow-xl hover:scale-105 transition-transform"
             >
               Start Exercise

@@ -67,8 +67,18 @@ export default function DotTracing({ onComplete }: DotTracingProps) {
     setScore(prev => prev + 10);
   };
 
+  const startExercise = () => {
+    if (containerRef.current) {
+      containerRef.current.requestFullscreen().catch(() => {});
+    }
+    setIsActive(true);
+    setScore(0);
+    setTimeLeft(60);
+    startTimeRef.current = 0;
+  };
+
   return (
-    <div className="flex flex-col items-center w-full max-w-4xl">
+    <div className="flex flex-col items-center w-full max-w-4xl" ref={containerRef}>
       <div className="w-full flex justify-between items-center mb-6 px-4">
         <h2 className="text-2xl font-bold text-green-800">Dot Tracing</h2>
         <div className="flex gap-8 text-xl font-bold">
@@ -78,7 +88,6 @@ export default function DotTracing({ onComplete }: DotTracingProps) {
       </div>
 
       <div 
-        ref={containerRef}
         className="relative w-full aspect-video bg-white rounded-3xl border-4 border-green-100 shadow-inner overflow-hidden cursor-none"
       >
         {!isActive && (
@@ -89,7 +98,7 @@ export default function DotTracing({ onComplete }: DotTracingProps) {
               <span className="font-bold text-yellow-400">Keep your head still!</span>
             </p>
             <button 
-              onClick={() => { setIsActive(true); setScore(0); setTimeLeft(60); startTimeRef.current = 0; }} 
+              onClick={startExercise} 
               className="btn btn-primary btn-lg px-12 rounded-2xl shadow-xl hover:scale-105 transition-transform"
             >
               Start Exercise
