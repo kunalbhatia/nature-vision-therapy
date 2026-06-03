@@ -14,12 +14,13 @@ import AdBanner from "./components/AdBanner";
 import HomePage from "./pages/HomePage";
 import StoriesPage from "./pages/StoriesPage";
 import DashboardPage, { ChildDashboard, ParentDashboard } from "./pages/DashboardPage";
-import TherapyPage, { 
+import TherapyPage, {
   PatchingTimerPage,
-  AnaglyphGamesPage, 
-  MonocularExercisesPage, 
-  PursuitExercisesPage, 
-  SaccadeTrainingPage 
+  AnaglyphGamesPage,
+  MonocularExercisesPage,
+  PursuitExercisesPage,
+  SaccadeTrainingPage,
+  AnaglyphSnakePage
 } from "./pages/TherapyPage";
 import PersonalizePage from "./pages/PersonalizePage";
 
@@ -103,6 +104,7 @@ function App() {
               <Route path="monocular" element={<MonocularExercisesPage />} />
               <Route path="pursuit" element={<PursuitExercisesPage />} />
               <Route path="saccade" element={<SaccadeTrainingPage />} />
+              <Route path="snake" element={<AnaglyphSnakePage />} />
             </Route>
 
             <Route path="/personalize" element={<PersonalizePage />} />

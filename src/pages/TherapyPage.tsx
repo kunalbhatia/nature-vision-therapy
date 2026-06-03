@@ -10,6 +10,7 @@ import NearFarFocus from "../components/exercises/NearFarFocus";
 import CharacterHunt from "../components/exercises/CharacterHunt";
 import SmoothPursuit from "../components/exercises/SmoothPursuit";
 import SaccadeTraining from "../components/exercises/SaccadeTraining";
+import AnaglyphSnake from "../components/games/AnaglyphSnake";
 
 export default function TherapyPage() {
   const location = useLocation();
@@ -50,6 +51,13 @@ export default function TherapyPage() {
       gradient: "from-amber-500 to-red-600 shadow-amber-500/20", 
       desc: "Quick eye movements", 
       icon: <FaBolt /> 
+    },
+    { 
+      path: "snake", 
+      label: "Anaglyph Snake", 
+      gradient: "from-green-500 to-emerald-700 shadow-green-500/20", 
+      desc: "Classic game for fusion", 
+      icon: <FaGamepad /> 
     },
   ];
 
@@ -132,6 +140,10 @@ export function PursuitExercisesPage() {
 
 export function SaccadeTrainingPage() { 
   return <SaccadeTraining />; 
+}
+
+export function AnaglyphSnakePage() {
+  return <AnaglyphSnake />;
 }
 
 

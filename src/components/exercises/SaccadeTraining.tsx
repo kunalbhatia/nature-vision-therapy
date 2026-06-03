@@ -19,6 +19,7 @@ export default function SaccadeTraining({ onComplete }: SaccadeTrainingProps) {
   const [isActive, setIsActive] = useState(false);
   const [reactionTimes, setReactionTimes] = useState<number[]>([]);
   const lastSpawnTime = useRef<number>(0);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   const toggleTarget = useCallback(() => {
     setActiveSide(prev => {
@@ -86,8 +87,19 @@ export default function SaccadeTraining({ onComplete }: SaccadeTrainingProps) {
     toggleTarget();
   };
 
+  const startTraining = () => {
+    if (containerRef.current) {
+      containerRef.current.requestFullscreen().catch(() => {});
+    }
+    setIsActive(true);
+    setScore(0);
+    setTimeLeft(60);
+    setReactionTimes([]);
+    lastSpawnTime.current = performance.now();
+  };
+
   return (
-    <div className="flex flex-col items-center w-full max-w-4xl">
+    <div className="flex flex-col items-center w-full max-w-4xl" ref={containerRef}>
       <div className="w-full flex justify-between items-center mb-6 px-4">
         <h2 className="text-2xl font-bold text-orange-400 flex items-center gap-2">
           <FaBolt className="text-yellow-500" /> Anaglyph Saccade
@@ -107,7 +119,7 @@ export default function SaccadeTraining({ onComplete }: SaccadeTrainingProps) {
               Jump your eyes to the <span className="text-yellow-400 font-bold">flashing target</span> as fast as you can!
             </p>
             <button 
-              onClick={() => { setIsActive(true); setScore(0); setTimeLeft(60); setReactionTimes([]); lastSpawnTime.current = performance.now(); }} 
+              onClick={startTraining} 
               className="btn btn-warning btn-lg px-12 rounded-2xl shadow-xl hover:scale-105 transition-transform font-black"
             >
               Start Training

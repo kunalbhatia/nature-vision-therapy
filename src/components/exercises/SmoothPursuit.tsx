@@ -15,6 +15,7 @@ export default function SmoothPursuit({ onComplete }: SmoothPursuitProps) {
   
   const startTimeRef = useRef<number>(0);
   const requestRef = useRef<number>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   const animate = useCallback((time: number) => {
     if (!startTimeRef.current) startTimeRef.current = time;
@@ -61,8 +62,17 @@ export default function SmoothPursuit({ onComplete }: SmoothPursuitProps) {
     }
   };
 
+  const startTracking = () => {
+    if (containerRef.current) {
+      containerRef.current.requestFullscreen().catch(() => {});
+    }
+    setIsActive(true);
+    setTimeLeft(60);
+    startTimeRef.current = 0;
+  };
+
   return (
-    <div className="flex flex-col items-center w-full max-w-4xl">
+    <div className="flex flex-col items-center w-full max-w-4xl" ref={containerRef}>
       <div className="w-full flex justify-between items-center mb-6 px-4">
         <h2 className="text-2xl font-bold text-blue-800 flex items-center gap-2">
           <FaWind className="text-blue-400" /> Smooth Pursuit
@@ -87,7 +97,7 @@ export default function SmoothPursuit({ onComplete }: SmoothPursuitProps) {
               <span className="font-bold text-yellow-300">Smooth movements only!</span>
             </p>
             <button 
-              onClick={() => { setIsActive(true); setTimeLeft(60); startTimeRef.current = 0; }} 
+              onClick={startTracking} 
               className="btn btn-info btn-lg px-12 rounded-2xl shadow-xl hover:scale-105 transition-transform text-white"
             >
               Start Tracking

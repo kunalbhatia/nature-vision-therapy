@@ -72,7 +72,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       streak,
       weeklyStats: weeklySessions.length,
       level: Math.floor(totalXP / 500) + 1,
-      nextLevelXP: 500 - (totalXP % 500)
+      nextLevelXP: 500 - (totalXP % 500),
+      highestSnakeLevel: user?.highestSnakeLevel || 1
     });
   } catch (err) {
     console.error('Get summary error:', err);
