@@ -45,7 +45,7 @@ export default function AnaglyphSnake() {
   const spawnFoods = useCallback((count: number) => {
     const newFoods: Food[] = [];
     for (let i = 0; i < count; i++) {
-      let x, y;
+      let x: number, y: number;
       // Simple collision check for food spawning
       do {
         x = Math.floor(Math.random() * GRID_SIZE_X);
