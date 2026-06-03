@@ -1,5 +1,6 @@
 import { Link, Outlet, useLocation } from "react-router-dom";
 import { useState } from "react";
+import { FaHourglassHalf, FaGamepad, FaEye, FaCrosshairs, FaBolt, FaArrowLeft } from "react-icons/fa";
 import PatchingTimer from "../components/therapy/PatchingTimer";
 import StreakCalendar from "../components/therapy/StreakCalendar";
 import AnaglyphBubblePop from "../components/games/AnaglyphBubblePop";
@@ -15,11 +16,41 @@ export default function TherapyPage() {
   const isBaseTherapy = location.pathname === "/therapy";
 
   const exercises = [
-    { path: "patching", label: "Patching Timer", color: "btn-primary", desc: "Track your daily patching" },
-    { path: "anaglyph", label: "Red-Blue Games", color: "btn-secondary", desc: "Games for both eyes" },
-    { path: "monocular", label: "Right-Eye Exercises", color: "btn-accent", desc: "Train your weaker eye" },
-    { path: "pursuit", label: "Tracking Exercises", color: "btn-info", desc: "Follow moving targets" },
-    { path: "saccade", label: "Saccade Training", color: "btn-warning", desc: "Quick eye movements" },
+    { 
+      path: "patching", 
+      label: "Patching Timer", 
+      gradient: "from-emerald-500 to-teal-600 shadow-emerald-500/20", 
+      desc: "Track your daily patching", 
+      icon: <FaHourglassHalf /> 
+    },
+    { 
+      path: "anaglyph", 
+      label: "Red-Blue Games", 
+      gradient: "from-indigo-500 to-violet-600 shadow-indigo-500/20", 
+      desc: "Games for both eyes", 
+      icon: <FaGamepad /> 
+    },
+    { 
+      path: "monocular", 
+      label: "Right-Eye Exercises", 
+      gradient: "from-rose-500 to-orange-600 shadow-rose-500/20", 
+      desc: "Train your weaker eye", 
+      icon: <FaEye /> 
+    },
+    { 
+      path: "pursuit", 
+      label: "Tracking Exercises", 
+      gradient: "from-cyan-500 to-blue-600 shadow-cyan-500/20", 
+      desc: "Follow moving targets", 
+      icon: <FaCrosshairs /> 
+    },
+    { 
+      path: "saccade", 
+      label: "Saccade Training", 
+      gradient: "from-amber-500 to-red-600 shadow-amber-500/20", 
+      desc: "Quick eye movements", 
+      icon: <FaBolt /> 
+    },
   ];
 
   return (
@@ -29,21 +60,28 @@ export default function TherapyPage() {
       {isBaseTherapy ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {exercises.map((ex) => (
-            <Link key={ex.path} to={`/therapy/${ex.path}`} className={`group p-6 rounded-3xl border-4 border-transparent hover:border-green-200 bg-white shadow-md hover:shadow-xl transition-all flex flex-col items-start gap-4`}>
-               <div className={`w-12 h-12 rounded-2xl ${ex.color.replace('btn-', 'bg-')} flex items-center justify-center text-white text-2xl font-bold`}>
-                 {ex.label[0]}
-               </div>
-               <div>
-                 <h3 className="text-xl font-bold text-gray-800 group-hover:text-green-700">{ex.label}</h3>
-                 <p className="text-sm text-gray-500">{ex.desc}</p>
-               </div>
+            <Link 
+              key={ex.path} 
+              to={`/therapy/${ex.path}`} 
+              className={`group p-6 rounded-3xl bg-gradient-to-br ${ex.gradient} shadow-lg hover:shadow-2xl hover:scale-[1.03] active:scale-[0.98] transition-all duration-300 flex flex-col items-start gap-4 relative overflow-hidden`}
+            >
+              {/* Background Glow Pattern */}
+              <div className="absolute right-0 bottom-0 w-24 h-24 bg-white/10 rounded-full blur-2xl translate-x-6 translate-y-6 group-hover:scale-150 transition-all duration-500" />
+              
+              <div className="w-12 h-12 rounded-2xl bg-white/20 backdrop-blur-sm border border-white/25 flex items-center justify-center text-white text-2xl shadow-inner">
+                {ex.icon}
+              </div>
+              <div className="relative z-10">
+                <h3 className="text-xl font-extrabold text-white mb-1 group-hover:translate-x-1 transition-transform duration-300">{ex.label}</h3>
+                <p className="text-sm text-white/90">{ex.desc}</p>
+              </div>
             </Link>
           ))}
         </div>
       ) : (
         <div>
-          <Link to="/therapy" className="inline-flex items-center gap-2 mb-6 px-4 py-2 rounded-2xl text-gray-500 font-bold hover:bg-green-50 hover:text-green-700 transition-all">
-            ← Back to Therapy Center
+          <Link to="/therapy" className="inline-flex items-center gap-2 mb-6 px-4 py-2 rounded-xl text-green-700 bg-green-50 hover:bg-green-100 hover:text-green-800 transition-all font-bold text-sm">
+            <FaArrowLeft /> Back to Therapy Center
           </Link>
           <div className="p-8 bg-gray-50/50 rounded-3xl flex items-center justify-center border-4 border-dashed border-gray-100 min-h-[50vh]">
             <Outlet />

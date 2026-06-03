@@ -17,7 +17,7 @@ const defaultCharacters = [
   { key: "bhai", label: "Your brother's name" },
 ];
 
-const Personalization = ({ onSave }: { onSave: () => void }) => {
+const Personalization = ({ onSave }: { onSave?: () => void }) => {
   const { showMessage } = useSnackbar();
   const [formData, setFormData] = useState<
     Record<string, { name: string; birthYear: string; gender: string }>
@@ -166,83 +166,102 @@ const Personalization = ({ onSave }: { onSave: () => void }) => {
   const allCharacters = [...defaultCharacters, ...customCharacters];
 
   return (
-    <div className="p-6 bg-white rounded-lg shadow-md max-w-xl mx-auto">
-      <h2 className="text-xl font-semibold mb-4">Personalization</h2>
-      <p className="mb-4 text-gray-600">
-        Enter names and birth years for each character:
+    <div className="h-full flex flex-col text-gray-800">
+      <p className="mb-4 text-gray-500 text-sm shrink-0">
+        Enter names and birth years for each character to personalize stories and exercises:
       </p>
 
-      <div className="space-y-4">
+      {/* Grid Headers for Large Screens */}
+      <div className="hidden md:grid md:grid-cols-5 gap-3 items-center mb-2 pb-2 border-b border-gray-200 text-xs font-bold text-gray-500 uppercase tracking-wider pr-3 shrink-0">
+        <div className="md:col-span-2">Relationship / Character</div>
+        <div>Name</div>
+        <div>Birth Year</div>
+        <div>Gender</div>
+      </div>
+
+      {/* Inner Scroll Container for Characters */}
+      <div className="flex-1 overflow-y-auto pr-2 space-y-1 scrollbar-thin min-h-0">
         {allCharacters.map(({ key, label }) => {
           const birthYear = formData[key]?.birthYear || "";
           const age = birthYear ? currentYear - parseInt(birthYear) : "";
           return (
-            <div key={key} className="grid grid-cols-4 gap-4 items-center">
-              <label className="text-gray-700">{label}</label>
+            <div key={key} className="grid grid-cols-1 md:grid-cols-5 gap-3 items-center py-1.5 border-b border-gray-100 last:border-b-0">
+              <label className="text-sm font-semibold text-gray-700 md:col-span-2 truncate">{label}</label>
 
-              <input
-                type="text"
-                placeholder="Name"
-                value={formData[key]?.name || ""}
-                onChange={(e) => handleChange(key, "name", e.target.value)}
-                className="border px-2 py-1 rounded"
-              />
+              <div className="w-full md:col-span-1">
+                <input
+                  type="text"
+                  placeholder="Name"
+                  value={formData[key]?.name || ""}
+                  onChange={(e) => handleChange(key, "name", e.target.value)}
+                  className="input input-bordered input-sm w-full bg-white text-gray-900 border-gray-300 placeholder-gray-400 focus:bg-white focus:text-gray-900 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all text-sm h-9"
+                />
+              </div>
 
-              <input
-                type="number"
-                placeholder="Birth Year"
-                value={formData[key]?.birthYear || ""}
-                onChange={(e) => handleChange(key, "birthYear", e.target.value)}
-                className="border px-2 py-1 rounded"
-              />
+              <div className="w-full md:col-span-1 flex items-center gap-2">
+                <input
+                  type="number"
+                  placeholder="Year"
+                  value={formData[key]?.birthYear || ""}
+                  onChange={(e) => handleChange(key, "birthYear", e.target.value)}
+                  className="input input-bordered input-sm w-24 flex-shrink-0 bg-white text-gray-900 border-gray-300 placeholder-gray-400 focus:bg-white focus:text-gray-900 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all text-sm h-9"
+                />
+                {formData[key]?.birthYear && (
+                  <span className="text-xs md:text-sm text-emerald-600 font-bold select-none whitespace-nowrap">
+                    {age} yrs
+                  </span>
+                )}
+              </div>
 
-              {key === "me" || key.startsWith("custom_") ? (
-                <select
-                  value={formData[key]?.gender || ""}
-                  onChange={(e) => handleChange(key, "gender", e.target.value)}
-                  className="border px-2 py-1 rounded"
-                >
-                  <option value="">Gender</option>
-                  <option value="male">Male</option>
-                  <option value="female">Female</option>
-                  <option value="other">Other</option>
-                </select>
-              ) : (
-                <div /> // keeps grid aligned
-              )}
-
-              {formData[key]?.birthYear && (
-                <p className="text-sm text-gray-500 col-span-4">
-                  Age: {age} years
-                </p>
-              )}
+              <div className="w-full md:col-span-1">
+                {key === "me" || key.startsWith("custom_") ? (
+                  <select
+                    value={formData[key]?.gender || ""}
+                    onChange={(e) => handleChange(key, "gender", e.target.value)}
+                    className="select select-bordered select-sm w-full bg-white text-gray-900 border-gray-300 focus:bg-white focus:text-gray-900 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all text-sm h-9 min-h-fit"
+                  >
+                    <option value="" className="bg-white text-gray-950">Gender</option>
+                    <option value="male" className="bg-white text-gray-950">Male</option>
+                    <option value="female" className="bg-white text-gray-950">Female</option>
+                    <option value="other" className="bg-white text-gray-950">Other</option>
+                  </select>
+                ) : (
+                  <div className="text-gray-400 text-sm italic pl-4 select-none hidden md:block">—</div>
+                )}
+              </div>
             </div>
           );
         })}
       </div>
 
-      <div className="mt-6 flex gap-2 items-center">
-        <input
-          type="text"
-          placeholder="Add another character (e.g. best friend)"
-          value={newLabel}
-          onChange={(e) => setNewLabel(e.target.value)}
-          className="border px-3 py-2 rounded w-full"
-        />
+      {/* Add Custom Character Section */}
+      <div className="mt-4 p-3 bg-emerald-50/50 rounded-2xl border border-emerald-100 flex flex-col md:flex-row gap-3 items-center justify-between shrink-0">
+        <div className="w-full md:flex-1">
+          <input
+            type="text"
+            placeholder="Add another character (e.g. best friend, cousin)"
+            value={newLabel}
+            onChange={(e) => setNewLabel(e.target.value)}
+            className="input input-bordered input-sm w-full bg-white text-gray-900 border-gray-300 placeholder-gray-400 focus:bg-white focus:text-gray-900 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all text-sm h-9"
+          />
+        </div>
         <button
           onClick={handleAddCharacter}
-          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-500"
+          className="btn bg-green-800 hover:bg-green-700 text-white rounded-xl px-5 font-bold text-sm h-9 min-h-fit w-full md:w-auto border-none"
         >
-          Add
+          Add Character
         </button>
       </div>
 
-      <button
-        onClick={handleSubmit}
-        className="mt-6 w-full bg-green-600 text-white py-2 rounded hover:bg-green-500"
-      >
-        Save Details
-      </button>
+      {/* Submit Button */}
+      <div className="mt-4 flex justify-end shrink-0">
+        <button
+          onClick={handleSubmit}
+          className="px-6 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl shadow-lg shadow-emerald-600/20 transition-all hover:scale-[1.02] active:scale-[0.98] w-full md:w-48 text-sm"
+        >
+          Save Details
+        </button>
+      </div>
     </div>
   );
 };

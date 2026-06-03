@@ -4,7 +4,6 @@ import ParentDashboard from "../components/dashboard/ParentDashboard";
 
 export default function DashboardPage() {
   const location = useLocation();
-  const isBaseDashboard = location.pathname === "/dashboard";
 
   return (
     <div className="w-full max-w-6xl p-6 bg-white/95 rounded-xl shadow-xl min-h-[80vh]">
@@ -26,19 +25,9 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      {isBaseDashboard ? (
-        <div className="flex flex-col items-center justify-center py-20 text-center">
-          <div className="text-6xl mb-6">🔭</div>
-          <h2 className="text-3xl font-bold text-gray-800 mb-4">Choose your perspective</h2>
-          <p className="text-gray-600 max-w-md text-lg">
-            Are you tracking your own super-vision powers, or reviewing clinical progress?
-          </p>
-        </div>
-      ) : (
-        <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-          <Outlet />
-        </div>
-      )}
+      <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+        <Outlet />
+      </div>
     </div>
   );
 }
