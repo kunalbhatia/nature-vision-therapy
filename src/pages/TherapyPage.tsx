@@ -11,6 +11,7 @@ import CharacterHunt from "../components/exercises/CharacterHunt";
 import SmoothPursuit from "../components/exercises/SmoothPursuit";
 import SaccadeTraining from "../components/exercises/SaccadeTraining";
 import AnaglyphSnake from "../components/games/AnaglyphSnake";
+import BrockString from "../components/exercises/BrockString";
 
 export default function TherapyPage() {
   const location = useLocation();
@@ -51,6 +52,13 @@ export default function TherapyPage() {
       gradient: "from-amber-500 to-red-600 shadow-amber-500/20", 
       desc: "Quick eye movements", 
       icon: <FaBolt /> 
+    },
+    { 
+      path: "brock-string", 
+      label: "Virtual Brock String", 
+      gradient: "from-indigo-600 to-blue-800 shadow-indigo-500/20", 
+      desc: "Convergence training", 
+      icon: <FaEye /> 
     },
     { 
       path: "snake", 
@@ -144,6 +152,10 @@ export function SaccadeTrainingPage() {
 
 export function AnaglyphSnakePage() {
   return <AnaglyphSnake />;
+}
+
+export function BrockStringPage() {
+  return <BrockString />;
 }
 
 

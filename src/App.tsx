@@ -20,7 +20,8 @@ import TherapyPage, {
   MonocularExercisesPage,
   PursuitExercisesPage,
   SaccadeTrainingPage,
-  AnaglyphSnakePage
+  AnaglyphSnakePage,
+  BrockStringPage
 } from "./pages/TherapyPage";
 import PersonalizePage from "./pages/PersonalizePage";
 
@@ -104,6 +105,7 @@ function App() {
               <Route path="monocular" element={<MonocularExercisesPage />} />
               <Route path="pursuit" element={<PursuitExercisesPage />} />
               <Route path="saccade" element={<SaccadeTrainingPage />} />
+              <Route path="brock-string" element={<BrockStringPage />} />
               <Route path="snake" element={<AnaglyphSnakePage />} />
             </Route>
 
