@@ -5,12 +5,15 @@ A comprehensive React + TypeScript + Vite application for vision therapy through
 ## ✨ Features
 
 - 🤖 **AI Story Generation** - Dynamic story creation using Google's Generative AI
-- 👤 **User Authentication** - Secure login/signup with JWT and MongoDB
-- 🎨 **Personalization** - Customizable user preferences and settings
-- 📖 **Adjustable Reading Experience** - Font size controls for accessibility
-- 🌲 **Nature-Inspired UI** - Calming design using Tailwind CSS and DaisyUI
-- 📱 **Responsive Design** - Works seamlessly across all devices
-- ⚡ **Fast & Modern** - Built with Vite for optimal performance
+- 👁️ **Vision Therapy Suite** - Clinically-focused exercises:
+  - **Red-Blue Anaglyph Games:** Snake and Bubble Pop for binocular fusion training.
+  - **Monocular Exercises:** Dot Tracing, Near-Far Focus, Character Hunt, Saccade Training, and Smooth Pursuit.
+- ⏱️ **Patching Compliance** - Integrated timer, streak tracking, and milestone badges.
+- 📊 **Progress Dashboards** - Dedicated views for Child (XP/Levels) and Parent (Compliance/History).
+- 👤 **User Authentication** - Secure login/signup with JWT and MongoDB (Consolidated API).
+- 🎨 **Personalization** - Customizable user preferences and settings.
+- 📖 **Adjustable Reading Experience** - Font size controls and nature-inspired UI.
+- 📱 **Responsive & Immersive** - Fullscreen support for all activities on mobile and desktop.
 
 ## 🚀 Getting Started
 
@@ -39,11 +42,11 @@ A comprehensive React + TypeScript + Vite application for vision therapy through
 3. **Environment Setup**
    Create a `.env` file with your configuration:
 
-```env
+   ```env
    MONGODB_URI=your_mongodb_connection_string
    JWT_SECRET=your_jwt_secret
    GOOGLE_AI_API_KEY=your_google_ai_api_key
-```
+   ```
 
 ## 📋 Available Scripts
 
@@ -52,30 +55,16 @@ All scripts are defined in `package.json` and can be run with `pnpm <script-name
 ### Development Scripts
 
 - **`pnpm dev`** - Start development server with hot reload
-  - Runs Vite development server on `http://localhost:5173`
-  - Includes hot module replacement (HMR)
-
-- **`pnpm dev:vercel`** - Start development server with Vercel functions
-  - Runs `vercel dev` for local development with serverless functions
-  - Useful for testing API routes locally
+- **`pnpm dev:vercel`** - Start development server with Vercel functions (routes to `/api`)
 
 ### Build Scripts
 
-- **`pnpm build`** - Build for production
-  - Runs TypeScript compiler (`tsc -b`) followed by Vite build
-  - Outputs optimized assets to `dist/` directory
-  - Includes type checking and bundling
-
+- **`pnpm build`** - Build for production (includes type checking)
 - **`pnpm preview`** - Preview production build locally
-  - Serves the built application from `dist/`
-  - Useful for testing production build before deployment
 
 ### Code Quality Scripts
 
 - **`pnpm lint`** - Run ESLint on all files
-  - Uses ESLint v9 with TypeScript support
-  - Includes React hooks and React refresh plugins
-  - Enforces code quality and consistency
 
 ## 🏗️ Project Architecture
 
@@ -83,64 +72,41 @@ All scripts are defined in `package.json` and can be run with `pnpm <script-name
 
 ```bash
 src/
-├── components/          # React components
-│   ├── Controls.tsx     # Font size and topic controls
-│   ├── LoginForm.tsx    # User authentication forms
-│   ├── SignupForm.tsx   # User registration
-│   ├── Modal.tsx        # Reusable modal component
-│   ├── NavBar.tsx       # Navigation header
-│   ├── Personalization.tsx # User settings
-│   ├── Preloader.tsx    # Loading indicator
-│   ├── Snackbar.tsx     # Toast notifications
-│   ├── StoryDisplay.tsx # Story rendering component
+├── components/
+│   ├── dashboard/       # Child & Parent progress views
+│   ├── exercises/       # Vision training (Pursuit, Saccade, Focus, etc.)
+│   ├── games/           # Anaglyph Red-Blue games (Snake, Bubble Pop)
+│   ├── therapy/         # Patching timer, Streaks, Badges
+│   ├── Controls.tsx     # Font & Topic controls
+│   ├── NavBar.tsx       # Navigation
+│   ├── StoryDisplay.tsx # Story rendering
 │   └── StoryGenerator.tsx # AI story generation
-├── context/             # React context providers
-│   ├── PreloaderContext.tsx
-│   └── SnackbarContext.ts
-├── hooks/               # Custom React hooks
-│   ├── AuthStatus.ts    # Authentication state
-│   ├── Preloader.ts     # Loading state management
-│   └── Snackbar.ts      # Notification system
-├── providers/           # Context providers
-│   └── SnackbarProvider.tsx
-├── App.tsx             # Main application component
-├── main.tsx            # Application entry point
-└── index.css           # Global styles
+├── context/             # React context (Snackbar, Preloader)
+├── hooks/               # Custom hooks (Auth, UI state)
+├── pages/               # Page-level components
+├── App.tsx             # Main router
+└── main.tsx            # Entry point
 ```
 
 ### Backend API Structure
 
 ```bash
 api/
-├── get-characters-details.ts # Character data retrieval
-├── login.ts                  # User authentication
-├── logout.ts                 # Session termination
-├── me.ts                     # User profile data
-├── pingMongo.ts             # Database health check
-├── save-characters.ts        # Character data persistence
-└── signup.ts                # User registration
+├── auth.ts              # Consolidated Auth (Login, Signup, Logout, Me)
+├── get-progress-summary.ts # Dashboard data aggregation
+├── save-game-score.ts    # Exercise & Game results
+├── save-patching-session.ts # Patching timer persistence
+├── get-patching-history.ts  # Calendar data
+└── update-snake-level.ts    # Game progress persistence
 ```
 
 ## 🛠️ Technology Stack
 
-### Frontend
+- **Frontend:** React 19, TypeScript, Vite, Tailwind CSS, DaisyUI.
+- **Backend:** Vercel Functions (Serverless), MongoDB, JWT, bcryptjs.
+- **AI:** Google Generative AI (Gemini).
+- **Testing:** Cypress (E2E and Component).
 
-- **React 19** - Latest React with concurrent features
-- **TypeScript** - Type-safe JavaScript
-- **Vite** - Fast build tool and development server
-- **Tailwind CSS** - Utility-first CSS framework
-- **DaisyUI** - Component library for Tailwind
-- **React Hook Form** - Performant form handling
-- **React Icons** - Icon library
-- **Zod** - Schema validation
-
-### Backend & Services
-
-- **Vercel Functions** - Serverless API endpoints
-- **MongoDB** - Document database
-- **JWT** - Secure authentication tokens
-- **bcryptjs** - Password hashing
-- **Google Generative AI** - Story generation
 
 ### Development Tools
 
