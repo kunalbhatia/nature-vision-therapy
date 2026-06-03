@@ -6,15 +6,28 @@ describe("Controls Component", () => {
   let onTopicSelect: Cypress.Agent<sinon.SinonStub>;
   let setFontSize: Cypress.Agent<sinon.SinonStub>;
 
+  let handleSpeak: Cypress.Agent<sinon.SinonStub>;
+  let handlePause: Cypress.Agent<sinon.SinonStub>;
+  let handleStop: Cypress.Agent<sinon.SinonStub>;
+
   beforeEach(() => {
     onTopicSelect = cy.stub().as("onTopicSelect");
     setFontSize = cy.stub().as("setFontSize");
+    handleSpeak = cy.stub().as("handleSpeak");
+    handlePause = cy.stub().as("handlePause");
+    handleStop = cy.stub().as("handleStop");
 
     mount(
       <Controls
         onTopicSelect={onTopicSelect}
         fontSize={1.6}
         setFontSize={setFontSize}
+        isSpeaking={false}
+        isPaused={false}
+        handleSpeak={handleSpeak}
+        handlePause={handlePause}
+        handleStop={handleStop}
+        hasStory={false}
       />,
     );
   });
@@ -40,5 +53,23 @@ describe("Controls Component", () => {
   it("calls onTopicSelect when a topic is selected", () => {
     cy.get("select").select("magic");
     cy.get("@onTopicSelect").should("have.been.calledWith", "magic");
+  });
+
+  it("renders read aloud controls and handles interaction when story exists", () => {
+    mount(
+      <Controls
+        onTopicSelect={onTopicSelect}
+        fontSize={1.6}
+        setFontSize={setFontSize}
+        isSpeaking={false}
+        isPaused={false}
+        handleSpeak={handleSpeak}
+        handlePause={handlePause}
+        handleStop={handleStop}
+        hasStory={true}
+      />,
+    );
+    cy.get('[data-tip="Read Aloud"] button').should("exist").click();
+    cy.get("@handleSpeak").should("have.been.calledOnce");
   });
 });

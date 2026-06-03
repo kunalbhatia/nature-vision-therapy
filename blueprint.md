@@ -292,9 +292,30 @@ src/components/exercises/TargetTracker.tsx
 
 ---
 
+#### 5.7 Anaglyph Snake Game
+
+**Why:** Combines eye-hand coordination with binocular fusion training in a high-engagement format.
+
+**Features:**
+- Classic Snake mechanics on a grid.
+- **Dark Mode:** Solid black background to reduce eye strain.
+- **Visuals:** Pure white snake body (visible to both eyes).
+- **Anaglyph Therapy:** Particles (food) are randomly assigned as either **Red** (Right Eye) or **Blue/Cyan** (Left Eye).
+- **Forced Switch:** Child must use both eyes to find and eat all particles as they appear.
+- **Growth:** Snake increases in size with each particle consumed.
+- **Game Over:** Collision with walls or self ends the session.
+- **Controls:** Arrow keys or on-screen directional swipe.
+
+**New files:**
+```
+src/components/games/AnaglyphSnake.tsx
+```
+
+---
+
 ### PHASE 3 — Progress & Gamification
 
-#### 5.7 Progress Dashboard
+#### 5.8 Progress Dashboard
 
 **For the child:**
 - XP points earned today
@@ -338,7 +359,7 @@ ExerciseLog {
 
 ---
 
-#### 5.8 Reward / Unlock System
+#### 5.9 Reward / Unlock System
 
 - Earn stars per completed session
 - Stars unlock new story themes in the existing AI story generator
@@ -349,7 +370,7 @@ ExerciseLog {
 
 ### PHASE 4 — AI Story Enhancements
 
-#### 5.9 Therapy-Integrated Stories
+#### 5.10 Therapy-Integrated Stories
 
 - AI generates stories where the child IS the protagonist
 - Stories reference the therapy: "Zara used her super vision powers to spot the hidden treasure..."
@@ -369,7 +390,7 @@ interface StoryContext {
 
 ---
 
-#### 5.10 Read-Aloud Mode
+#### 5.11 Read-Aloud Mode
 
 - Text-to-speech for stories (Web Speech API)
 - Useful during patching when right eye is working hard

@@ -74,7 +74,7 @@ ${formattedCharacters}
   }
 
   const genAI = new GoogleGenerativeAI(import.meta.env.VITE_GEMINI_API_KEY);
-  const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' });
+  const model = genAI.getGenerativeModel({ model: 'gemini-3.5-flash' });
 
   const basePrompt = `Write a short ${topic.toLowerCase()} for kids in plain text (no title), inspired by Indian culture. The story should be engaging, simple, and suitable for children aged 5-18, in a friendly and encouraging tone. Avoid complex words and phrases.`;
   let finalPrompt: string | null = null;
