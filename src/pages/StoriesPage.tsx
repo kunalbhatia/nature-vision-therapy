@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import Controls from "../components/Controls";
 import StoryDisplay from "../components/StoryDisplay";
 import StoryGenerator from "../components/StoryGenerator";
@@ -15,7 +15,75 @@ export default function StoriesPage() {
   } | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
+  const [isSpeaking, setIsSpeaking] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
+  const synthRef = useRef<SpeechSynthesis | null>(
+    typeof window !== "undefined" ? window.speechSynthesis : null
+  );
+  const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (synthRef.current) {
+        synthRef.current.cancel();
+      }
+    };
+  }, []);
+
+  const handleSpeak = () => {
+    if (!selectedStory?.content || !synthRef.current) return;
+
+    if (isPaused) {
+      synthRef.current.resume();
+      setIsPaused(false);
+      setIsSpeaking(true);
+      return;
+    }
+
+    const utterance = new SpeechSynthesisUtterance(selectedStory.content);
+    utterance.onend = () => {
+      setIsSpeaking(false);
+      setIsPaused(false);
+    };
+    utterance.onerror = () => {
+      setIsSpeaking(false);
+      setIsPaused(false);
+    };
+
+    const voices = synthRef.current.getVoices();
+    const preferredVoice =
+      voices.find((v) => v.lang.includes("en-IN")) ||
+      voices.find((v) => v.lang.includes("en-GB")) ||
+      voices[0];
+    if (preferredVoice) utterance.voice = preferredVoice;
+
+    utterance.rate = 0.9;
+    utterance.pitch = 1.1;
+
+    utteranceRef.current = utterance;
+    synthRef.current.cancel();
+    synthRef.current.speak(utterance);
+    setIsSpeaking(true);
+  };
+
+  const handlePause = () => {
+    if (synthRef.current && isSpeaking) {
+      synthRef.current.pause();
+      setIsPaused(true);
+      setIsSpeaking(false);
+    }
+  };
+
+  const handleStop = () => {
+    if (synthRef.current) {
+      synthRef.current.cancel();
+      setIsSpeaking(false);
+      setIsPaused(false);
+    }
+  };
+
   const handleTopicSelect = (topic: string) => {
+    handleStop();
     setIsLoading(true);
     setSelectedStory(null);
     showPreloader();
@@ -40,6 +108,12 @@ export default function StoriesPage() {
         onTopicSelect={handleTopicSelect}
         fontSize={fontSize}
         setFontSize={setFontSize}
+        isSpeaking={isSpeaking}
+        isPaused={isPaused}
+        handleSpeak={handleSpeak}
+        handlePause={handlePause}
+        handleStop={handleStop}
+        hasStory={selectedStory !== null}
       />
       <StoryDisplay
         isLoading={isLoading}
