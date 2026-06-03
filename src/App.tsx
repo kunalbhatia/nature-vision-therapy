@@ -7,7 +7,6 @@ import LoginForm from "./components/LoginForm";
 import SignupForm from "./components/SignupForm";
 import { useSnackbar } from "./hooks/Snackbar";
 import useAuthStatus from "./hooks/AuthStatus";
-import Personalization from "./components/Personalization";
 import { usePreloader } from "./hooks/Preloader";
 import AdBanner from "./components/AdBanner";
 
@@ -16,20 +15,20 @@ import HomePage from "./pages/HomePage";
 import StoriesPage from "./pages/StoriesPage";
 import DashboardPage, { ChildDashboard, ParentDashboard } from "./pages/DashboardPage";
 import TherapyPage, { 
-  PatchingTimerPage, 
+  PatchingTimerPage,
   AnaglyphGamesPage, 
   MonocularExercisesPage, 
   PursuitExercisesPage, 
   SaccadeTrainingPage 
 } from "./pages/TherapyPage";
-import SettingsPage from "./pages/SettingsPage";
+import PersonalizePage from "./pages/PersonalizePage";
 
 function App() {
   const { showMessage } = useSnackbar();
   const { isLoggedIn: isAuthenticated, user } = useAuthStatus();
   const { showPreloader, hidePreloader } = usePreloader();
   const [modalType, setModalType] = useState<
-    "login" | "signup" | "personalize" | null
+    "login" | "signup" | null
   >(null);
 
   const [isLoggedIn, setIsLoggedIn] = useState(isAuthenticated);
@@ -64,7 +63,7 @@ function App() {
   return (
     <BrowserRouter>
       <div
-        className="min-h-screen flex flex-col items-center"
+        className="min-h-screen flex flex-row w-full"
         style={{
           backgroundImage: "url(/trees.png)",
           backgroundSize: "cover",
@@ -73,19 +72,27 @@ function App() {
         }}
       >
         <Navbar
-          onLogin={() => setModalType("login")}
           onLogout={handleLogout}
-          onConfigure={() => setModalType("personalize")}
-          onSignup={() => setModalType("signup")}
           isLoggedIn={isLoggedIn}
         />
         
-        <main className="flex-1 w-full flex flex-col items-center p-4">
-          <Routes>
-            <Route path="/" element={<HomePage />} />
+        <div className="flex-1 min-h-screen flex flex-col items-center overflow-x-hidden">
+          <main className="flex-1 w-full flex flex-col items-center p-4">
+            <Routes>
+              <Route
+                path="/"
+                element={
+                  <HomePage
+                    isLoggedIn={isLoggedIn}
+                    onLogin={() => setModalType("login")}
+                    onSignup={() => setModalType("signup")}
+                  />
+                }
+              />
             <Route path="/stories" element={<StoriesPage />} />
             
             <Route path="/dashboard" element={<DashboardPage />}>
+              <Route index element={<Navigate to="/dashboard/child" replace />} />
               <Route path="child" element={<ChildDashboard />} />
               <Route path="parent" element={<ParentDashboard />} />
             </Route>
@@ -98,11 +105,12 @@ function App() {
               <Route path="saccade" element={<SaccadeTrainingPage />} />
             </Route>
 
-            <Route path="/settings" element={<SettingsPage />} />
+            <Route path="/personalize" element={<PersonalizePage />} />
             
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </main>
+      </div>
 
         {modalType === "login" && (
           <Modal title="Login" onClose={() => setModalType(null)}>
@@ -121,11 +129,6 @@ function App() {
               onSignup={() => setModalType(null)}
               onStatusUpdate={(message, status) => showMessage(message, status)}
             />
-          </Modal>
-        )}
-        {modalType === "personalize" && (
-          <Modal title="Personalization" onClose={() => setModalType(null)}>
-            <Personalization onSave={() => setModalType(null)} />
           </Modal>
         )}
         <AdBanner isVisible={false} />
