@@ -9,6 +9,7 @@ interface ProgressSummary {
   level: number;
   exercisesCompleted: number;
   streak: number;
+  lastExerciseType?: string;
 }
 
 export default async function StoryGenerator({ topic }: StoryGeneratorType) {
@@ -56,9 +57,15 @@ export default async function StoryGenerator({ topic }: StoryGeneratorType) {
 
     let therapyContext = '';
     if (therapy) {
-      therapyContext = `\nContext: ${therapy.childName} has a "Vision Power" Level of ${therapy.level}. 
-      They just completed ${therapy.exercisesCompleted} exercises and have a ${therapy.streak}-day streak! 
-      Mention their super vision powers in a subtle, encouraging way.`;
+      const exerciseText = therapy.lastExerciseType 
+        ? `After successfully completing their ${therapy.lastExerciseType.replace(/_/g, ' ')} training, ` 
+        : '';
+
+      therapyContext = `
+Context: The hero, ${therapy.childName}, is a "Vision Warrior" with a Level ${therapy.level} Vision Power. 
+${exerciseText}They now have a ${therapy.streak}-day streak of training their eyes and have completed ${therapy.exercisesCompleted} missions. 
+The story should subtly celebrate their "Super Vision" and "Strong Eyes" as a natural part of their character's strength. 
+Make the story highly encouraging and related to their progress.`;
     }
 
     const prompt = `

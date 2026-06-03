@@ -65,6 +65,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return !isNaN(completedDate.getTime()) && completedDate >= sevenDaysAgo;
     });
 
+    const lastSession = allSessions.length > 0 
+      ? allSessions.sort((a, b) => new Date(b.completedAt).getTime() - new Date(a.completedAt).getTime())[0]
+      : null;
+
     return res.status(200).json({
       childName: user?.childName || user?.characterDetails?.me?.name || 'Little Hero',
       totalXP,
@@ -73,7 +77,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       weeklyStats: weeklySessions.length,
       level: Math.floor(totalXP / 500) + 1,
       nextLevelXP: 500 - (totalXP % 500),
-      highestSnakeLevel: user?.highestSnakeLevel || 1
+      highestSnakeLevel: user?.highestSnakeLevel || 1,
+      lastExerciseType: lastSession?.sessionType || null
     });
   } catch (err) {
     console.error('Get summary error:', err);
