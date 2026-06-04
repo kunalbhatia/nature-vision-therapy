@@ -151,7 +151,7 @@ export default function BrockString({ onComplete }: BrockStringProps) {
         {isActive && (
           <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/40 backdrop-blur-md px-6 py-2 rounded-full border border-white/10 text-white text-sm font-medium flex items-center gap-2">
             <FaInfoCircle className="text-indigo-400" />
-            Tap the bead you want to focus on. Look for the "X" pattern!
+            Tap the bead you want to focus on. Look for the &quot;X&quot; pattern!
           </div>
         )}
       </div>
@@ -168,7 +168,7 @@ export default function BrockString({ onComplete }: BrockStringProps) {
         <div className="bg-amber-50 p-6 rounded-3xl border border-amber-100">
           <h4 className="font-bold text-amber-800 mb-2">Clinical Goal</h4>
           <p className="text-sm text-amber-700 leading-relaxed">
-            This exercise trains <strong>convergence</strong> (eyes moving inward) and <strong>divergence</strong> (eyes moving outward). It's essential for treating binocular vision dysfunction.
+            This exercise trains <strong>convergence</strong> (eyes moving inward) and <strong>divergence</strong> (eyes moving outward). It&apos;s essential for treating binocular vision dysfunction.
           </p>
         </div>
       </div>
