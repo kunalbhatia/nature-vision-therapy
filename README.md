@@ -4,10 +4,10 @@ A comprehensive React + TypeScript + Vite application for vision therapy through
 
 ## ✨ Features
 
-- 🤖 **AI Story Generation** - Dynamic story creation using Google's Generative AI
+- 🤖 **AI Story Generation** - Dynamic story creation using Google's Generative AI, integrated with therapy progress and Text-to-Speech (Read Aloud).
 - 👁️ **Vision Therapy Suite** - Clinically-focused exercises:
-  - **Red-Blue Anaglyph Games:** Snake and Bubble Pop for binocular fusion training.
-  - **Monocular Exercises:** Dot Tracing, Near-Far Focus, Character Hunt, Saccade Training, and Smooth Pursuit.
+  - **3D Anaglyph Training:** **Virtual Brock String**, Snake, and Bubble Pop for binocular fusion and physiological diplopia training.
+  - **Monocular & Tracking:** Dot Tracing, Near-Far Focus, Character Hunt, Saccade Training, and Smooth Pursuit.
 - ⏱️ **Patching Compliance** - Integrated timer, streak tracking, and milestone badges.
 - 📊 **Progress Dashboards** - Dedicated views for Child (XP/Levels) and Parent (Compliance/History).
 - 👤 **User Authentication** - Secure login/signup with JWT and MongoDB (Consolidated API).
@@ -74,13 +74,13 @@ All scripts are defined in `package.json` and can be run with `pnpm <script-name
 src/
 ├── components/
 │   ├── dashboard/       # Child & Parent progress views
-│   ├── exercises/       # Vision training (Pursuit, Saccade, Focus, etc.)
+│   ├── exercises/       # Vision training (Brock String, Pursuit, Saccades, Focus, etc.)
 │   ├── games/           # Anaglyph Red-Blue games (Snake, Bubble Pop)
 │   ├── therapy/         # Patching timer, Streaks, Badges
 │   ├── Controls.tsx     # Font & Topic controls
 │   ├── NavBar.tsx       # Navigation
-│   ├── StoryDisplay.tsx # Story rendering
-│   └── StoryGenerator.tsx # AI story generation
+│   ├── StoryDisplay.tsx # Story rendering with TTS
+│   └── StoryGenerator.tsx # AI story generation with therapy context
 ├── context/             # React context (Snackbar, Preloader)
 ├── hooks/               # Custom hooks (Auth, UI state)
 ├── pages/               # Page-level components
@@ -111,7 +111,7 @@ api/
 ### Development Tools
 
 - **ESLint** - Code linting
-- **TypeScript ESLint** - TypeScript-specific linting
+- **TypeScript ESLint** - TypeScript-specific linter
 - **PostCSS** - CSS processing
 - **Autoprefixer** - CSS vendor prefixes
 
