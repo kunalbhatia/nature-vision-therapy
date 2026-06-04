@@ -254,11 +254,13 @@ src/components/exercises/ExerciseTimer.tsx
 
 **Why:** Brock string is a standard orthoptic exercise for convergence and binocular vision. Simulating it on screen is helpful for practice guidance.
 
+**Status:** ✅ Done
+
 **Features:**
 - Animated virtual Brock string on screen
 - Instruction overlay: "Focus on the near bead — you should see two strings crossing"
 - Guided session with timer
-- Video tutorial integration option
+- Visual simulation of physiological diplopia (double vision)
 
 ---
 

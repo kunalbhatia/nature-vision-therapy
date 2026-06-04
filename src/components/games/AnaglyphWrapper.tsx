@@ -39,20 +39,20 @@ export default function AnaglyphWrapper({ children }: AnaglyphWrapperProps) {
   );
 }
 
-export const RedEye: React.FC<{ children: React.ReactNode; className?: string; style?: React.CSSProperties }> = ({ children, className, style }) => (
-  <div style={{ filter: 'url(#red-channel)', ...style }} className={className}>
+export const RedEye: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({ children, className, style, ...props }) => (
+  <div style={{ filter: 'url(#red-channel)', ...style }} className={className} {...props}>
     {children}
   </div>
 );
 
-export const CyanEye: React.FC<{ children: React.ReactNode; className?: string; style?: React.CSSProperties }> = ({ children, className, style }) => (
-  <div style={{ filter: 'url(#cyan-channel)', ...style }} className={className}>
+export const CyanEye: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({ children, className, style, ...props }) => (
+  <div style={{ filter: 'url(#cyan-channel)', ...style }} className={className} {...props}>
     {children}
   </div>
 );
 
-export const BothEyes: React.FC<{ children: React.ReactNode; className?: string; style?: React.CSSProperties }> = ({ children, className, style }) => (
-  <div className={className} style={style}>
+export const BothEyes: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({ children, className, style, ...props }) => (
+  <div className={className} style={style} {...props}>
     {children}
   </div>
 );
