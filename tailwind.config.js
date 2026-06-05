@@ -4,6 +4,8 @@ module.exports = {
     extend: {
       colors: {
         pinkCustom: '#ff63c7',
+        anaglyphRed: '#dc2626',
+        anaglyphCyan: '#0891b2',
       },
     },
   },

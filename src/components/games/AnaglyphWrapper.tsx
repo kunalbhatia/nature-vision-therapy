@@ -32,7 +32,7 @@ export default function AnaglyphWrapper({ children }: AnaglyphWrapperProps) {
           </filter>
         </defs>
       </svg>
-      <div className="relative w-full h-full overflow-hidden bg-gray-900 rounded-xl cursor-crosshair">
+      <div className="relative w-full h-full overflow-hidden cursor-crosshair">
         {children}
       </div>
     </>

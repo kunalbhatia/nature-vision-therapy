@@ -1,6 +1,6 @@
 import { Link, Outlet, useLocation } from "react-router-dom";
 import { useState } from "react";
-import { FaHourglassHalf, FaGamepad, FaEye, FaCrosshairs, FaBolt, FaArrowLeft } from "react-icons/fa";
+import { FaHourglassHalf, FaGamepad, FaEye, FaCrosshairs, FaBolt, FaArrowLeft, FaRoute, FaSearch } from "react-icons/fa";
 import PatchingTimer from "../components/therapy/PatchingTimer";
 import StreakCalendar from "../components/therapy/StreakCalendar";
 import AnaglyphBubblePop from "../components/games/AnaglyphBubblePop";
@@ -11,8 +11,9 @@ import CharacterHunt from "../components/exercises/CharacterHunt";
 import SmoothPursuit from "../components/exercises/SmoothPursuit";
 import SaccadeTraining from "../components/exercises/SaccadeTraining";
 import AnaglyphSnake from "../components/games/AnaglyphSnake";
+import AnaglyphHiddenPicture from "../components/games/AnaglyphHiddenPicture";
+import AnaglyphMaze from "../components/games/AnaglyphMaze";
 import BrockString from "../components/exercises/BrockString";
-import DeviceRestriction from "../components/DeviceRestriction";
 
 export default function TherapyPage() {
   const location = useLocation();
@@ -100,7 +101,7 @@ export default function TherapyPage() {
           <Link to="/therapy" className="inline-flex items-center gap-2 mb-6 px-4 py-2 rounded-xl text-green-700 bg-green-50 hover:bg-green-100 hover:text-green-800 transition-all font-bold text-sm">
             <FaArrowLeft /> Back to Therapy Center
           </Link>
-          <div className="p-8 bg-gray-50/50 rounded-3xl flex items-center justify-center border-4 border-dashed border-gray-100 min-h-[50vh]">
+          <div className="bg-gray-50/50 rounded-3xl flex flex-col items-stretch border-4 border-dashed border-gray-100 min-h-[60vh]">
             <Outlet />
           </div>
         </div>
@@ -124,59 +125,115 @@ export function PatchingTimerPage() {
 }
 
 export function AnaglyphGamesPage() { 
+  const [active, setActive] = useState<'bubble' | 'hidden' | 'maze' | null>(null);
+
+  if (active === 'bubble') return <AnaglyphBubblePop />;
+  if (active === 'hidden') return <AnaglyphHiddenPicture />;
+  if (active === 'maze') return <AnaglyphMaze />;
+
   return (
-    <DeviceRestriction>
-      <AnaglyphBubblePop />
-    </DeviceRestriction>
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-4xl">
+      <button 
+        onClick={() => setActive('bubble')} 
+        className="group relative h-48 rounded-[2rem] bg-gradient-to-br from-indigo-500 to-violet-600 p-6 text-white transition-all hover:scale-105 active:scale-95 shadow-xl hover:shadow-indigo-500/20 overflow-hidden"
+      >
+        <div className="absolute top-0 right-0 p-4 opacity-20 group-hover:scale-150 transition-transform"><FaGamepad size={64} /></div>
+        <div className="relative z-10 text-left">
+           <h3 className="text-2xl font-black mb-2">Bubble Pop</h3>
+           <p className="text-sm opacity-80">Pop anaglyph bubbles to train fusion.</p>
+        </div>
+      </button>
+
+      <button 
+        onClick={() => setActive('hidden')} 
+        className="group relative h-48 rounded-[2rem] bg-gradient-to-br from-emerald-500 to-teal-600 p-6 text-white transition-all hover:scale-105 active:scale-95 shadow-xl hover:shadow-emerald-500/20 overflow-hidden"
+      >
+        <div className="absolute top-0 right-0 p-4 opacity-20 group-hover:scale-150 transition-transform"><FaGamepad size={64} /></div>
+        <div className="relative z-10 text-left">
+           <h3 className="text-2xl font-black mb-2">Hidden Picture</h3>
+           <p className="text-sm opacity-80">Find animals using both eyes together.</p>
+        </div>
+      </button>
+
+      <button 
+        onClick={() => setActive('maze')} 
+        className="group relative h-48 rounded-[2rem] bg-gradient-to-br from-blue-500 to-cyan-600 p-6 text-white transition-all hover:scale-105 active:scale-95 shadow-xl hover:shadow-blue-500/20 overflow-hidden"
+      >
+        <div className="absolute top-0 right-0 p-4 opacity-20 group-hover:scale-150 transition-transform"><FaGamepad size={64} /></div>
+        <div className="relative z-10 text-left">
+           <h3 className="text-2xl font-black mb-2">Ghost Maze</h3>
+           <p className="text-sm opacity-80">Navigate using simultaneous perception.</p>
+        </div>
+      </button>
+    </div>
   ); 
 }
 
 export function MonocularExercisesPage() { 
   const [active, setActive] = useState<'dot' | 'near-far' | 'hunt' | null>(null);
 
-  if (active === 'dot') return <DeviceRestriction><DotTracing onComplete={() => setActive(null)} /></DeviceRestriction>;
-  if (active === 'near-far') return <DeviceRestriction><NearFarFocus onComplete={() => setActive(null)} /></DeviceRestriction>;
-  if (active === 'hunt') return <DeviceRestriction><CharacterHunt onComplete={() => setActive(null)} /></DeviceRestriction>;
+  if (active === 'dot') return <DotTracing onComplete={() => setActive(null)} />;
+  if (active === 'near-far') return <NearFarFocus onComplete={() => setActive(null)} />;
+  if (active === 'hunt') return <CharacterHunt onComplete={() => setActive(null)} />;
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-4xl">
-      <button onClick={() => setActive('dot')} className="btn btn-lg h-32 btn-primary rounded-3xl text-xl">Dot Tracing</button>
-      <button onClick={() => setActive('near-far')} className="btn btn-lg h-32 btn-secondary rounded-3xl text-xl">Near-Far Focus</button>
-      <button onClick={() => setActive('hunt')} className="btn btn-lg h-32 btn-accent rounded-3xl text-xl">Character Hunt</button>
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-4xl p-6">
+      <button 
+        onClick={() => setActive('dot')} 
+        className="group relative h-48 rounded-[2rem] bg-gradient-to-br from-violet-500 to-indigo-600 p-6 text-white transition-all hover:scale-105 active:scale-95 shadow-xl hover:shadow-indigo-500/20 overflow-hidden"
+      >
+        <div className="absolute top-0 right-0 p-4 opacity-20 group-hover:scale-150 transition-transform">
+          <FaRoute size={64} />
+        </div>
+        <div className="relative z-10 text-left">
+          <h3 className="text-2xl font-black mb-2">Dot Tracing</h3>
+          <p className="text-sm opacity-80">Trace moving dots to improve precision and eye-hand coordination.</p>
+        </div>
+      </button>
+
+      <button 
+        onClick={() => setActive('near-far')} 
+        className="group relative h-48 rounded-[2rem] bg-gradient-to-br from-pink-500 to-rose-600 p-6 text-white transition-all hover:scale-105 active:scale-95 shadow-xl hover:shadow-pink-500/20 overflow-hidden"
+      >
+        <div className="absolute top-0 right-0 p-4 opacity-20 group-hover:scale-150 transition-transform">
+          <FaEye size={64} />
+        </div>
+        <div className="relative z-10 text-left">
+          <h3 className="text-2xl font-black mb-2">Near-Far Focus</h3>
+          <p className="text-sm opacity-80">Train eye focusing flexibility with virtual pencil pushups.</p>
+        </div>
+      </button>
+
+      <button 
+        onClick={() => setActive('hunt')} 
+        className="group relative h-48 rounded-[2rem] bg-gradient-to-br from-teal-500 to-emerald-600 p-6 text-white transition-all hover:scale-105 active:scale-95 shadow-xl hover:shadow-emerald-500/20 overflow-hidden"
+      >
+        <div className="absolute top-0 right-0 p-4 opacity-20 group-hover:scale-150 transition-transform">
+          <FaSearch size={64} />
+        </div>
+        <div className="relative z-10 text-left">
+          <h3 className="text-2xl font-black mb-2">Character Hunt</h3>
+          <p className="text-sm opacity-80">Scan the grid and find specific target characters.</p>
+        </div>
+      </button>
     </div>
   );
 }
 
 export function PursuitExercisesPage() { 
-  return (
-    <DeviceRestriction>
-      <SmoothPursuit />
-    </DeviceRestriction>
-  ); 
+  return <SmoothPursuit />; 
 }
 
 export function SaccadeTrainingPage() { 
-  return (
-    <DeviceRestriction>
-      <SaccadeTraining />
-    </DeviceRestriction>
-  ); 
+  return <SaccadeTraining />; 
 }
 
 export function AnaglyphSnakePage() {
-  return (
-    <DeviceRestriction>
-      <AnaglyphSnake />
-    </DeviceRestriction>
-  );
+  return <AnaglyphSnake />;
 }
 
 export function BrockStringPage() {
-  return (
-    <DeviceRestriction>
-      <BrockString />
-    </DeviceRestriction>
-  );
+  return <BrockString />;
 }
 
 
