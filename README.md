@@ -1,191 +1,116 @@
-# Nature Theme Vision Therapy
+# 🌿 Nature Theme Vision Therapy
 
-A comprehensive React + TypeScript + Vite application for vision therapy through interactive storytelling. Features AI-powered story generation, user authentication, personalization, and accessibility controls designed specifically for vision therapy sessions.
+### A Clinical & Technical Platform for Interactive Vision Training
 
-## ✨ Features
+Nature Theme Vision Therapy is a specialized, web-based platform designed to enhance pediatric vision therapy through **interactive storytelling** and **clinically-validated exercises**. By merging Google's Generative AI (Gemini) with traditional vision therapy protocols, the application transforms repetitive exercises into engaging missions, solving the "compliance hurdle" common in pediatric treatment.
 
-- 🤖 **AI Story Generation** - Dynamic story creation using Google's Generative AI, integrated with therapy progress and Text-to-Speech (Read Aloud).
-- 👁️ **Vision Therapy Suite** - Clinically-focused exercises:
-  - **3D Anaglyph Training:** **Virtual Brock String**, **Anaglyph Snake**, and **Anaglyph Bubble Pop** for binocular fusion and physiological diplopia training.
-  - **Monocular & Tracking:** **Dot Tracing**, **Near-Far Focus**, **Character Hunt**, **Saccade Training**, and **Smooth Pursuit**.
-- ⏱️ **Patching Compliance** - Integrated timer, streak tracking, and milestone badges.
-- 📊 **Progress Dashboards** - Dedicated views for Child (XP/Levels) and Parent (Compliance/History).
-- 👤 **User Authentication** - Secure login/signup with JWT and MongoDB (Consolidated `auth.ts` API).
-- 🎨 **Personalization** - Customizable user preferences and settings.
-- 📖 **Adjustable Reading Experience** - Font size controls and nature-inspired UI.
-- 📱 **Responsive & Immersive** - Fullscreen support for all activities on mobile and desktop.
+---
 
-## 🚀 Getting Started
+## 👨‍⚕️ Clinical Overview (For Eye Doctors)
 
-### Prerequisites
+This platform is designed to support the treatment of binocular vision disorders, amblyopia, and oculomotor dysfunction. It serves as a digital bridge between clinical office visits and home-based training.
 
-- **Node.js** (v18+ recommended)
-- **pnpm** (preferred) or npm/yarn
-- **MongoDB** database (for user authentication)
-- **Google Generative AI API key** (for story generation)
+### 🎯 Therapeutic Objectives
+- **Anti-Suppression Training:** Using Red-Cyan anaglyph technology to force the brain to process input from both eyes simultaneously.
+- **Binocular Fusion:** Training the eyes to work together through virtualized versions of the Brock String and other vergence tools.
+- **Oculomotor Control:** Improving the speed and accuracy of Saccades (jumping focus) and Smooth Pursuits (tracking objects).
+- **Accommodative Facility:** Training the eye's ability to switch focus between near and far targets.
+- **Patching Compliance:** Incentivizing patching sessions with high-quality AI-generated nature stories and a rewarding XP/Leveling system.
 
-### Installation
+### 👁️ The Vision Therapy Suite
 
-1. **Clone the repository**
+#### 3D Anaglyph Training (Requires Red-Blue Glasses)
+- **Virtual Brock String:** A digital simulation of the gold-standard tool for physiological diplopia training. Helps patients identify and fix suppression by visualizing the "V" pattern of strings and beads.
+- **Anaglyph Snake & Maze:** Games where elements are split across color channels. If the patient suppresses one eye, they will lose sight of either the walls or the player character, forcing active binocular participation.
+- **Hidden Picture:** Enhances figure-ground perception while maintaining binocular engagement.
 
+#### Oculomotor & Tracking
+- **Saccade Training:** Improves the ability to move the eyes quickly and accurately between two fixed points.
+- **Smooth Pursuit:** Enhances the ability to track a moving object across a complex background.
+- **Dot Tracing & Character Hunt:** Combines tracking with cognitive recognition to build visual-motor integration.
+- **Near-Far Focus:** Promotes flexibility in the eye's focusing muscles (ciliary muscles) by alternating between close and distant visual tasks.
+
+### 📊 Monitoring Progress
+- **Child Dashboard:** Gamifies therapy. Children earn XP, level up their "Vision Powers," and unlock achievement badges in a "Trophy Gallery."
+- **Parent Dashboard:** Provides clinical data. Parents can track patching minutes, exercise completion history, and view visual "Patching Trends" via automated charts to ensure compliance with the prescribed plan.
+
+---
+
+## 🛠️ Technical Documentation (For Developers)
+
+### Technology Stack
+- **Frontend:** React 19, TypeScript, Vite, Tailwind CSS, DaisyUI.
+- **Backend:** Serverless Vercel Functions (Node.js/TypeScript).
+- **Database:** MongoDB (User accounts & session history).
+- **AI Integration:** Google Generative AI (Gemini 1.5/2.0) for dynamic story generation.
+- **UI/UX:** Nature-inspired palette, fully responsive, and accessible controls.
+
+### 🚀 Getting Started
+
+#### Prerequisites
+- **Node.js** (v18+)
+- **pnpm** (preferred)
+- **MongoDB** instance
+- **Google AI API Key**
+
+#### Installation
+1. **Clone the repository:**
    ```bash
    git clone https://github.com/kunalbhatia/nature-vision-therapy.git
    cd nature-vision-therapy
    ```
-
-2. **Install dependencies**
-
+2. **Install dependencies:**
    ```bash
    pnpm install
    ```
-
-3. **Environment Setup**
-   Create a `.env` file with your configuration:
-
+3. **Environment Configuration:**
+   Create a `.env` file in the root directory:
    ```env
    MONGODB_URI=your_mongodb_connection_string
-   JWT_SECRET=your_jwt_secret
-   GOOGLE_AI_API_KEY=your_google_ai_api_key
+   JWT_SECRET=your_secret_key
+   GOOGLE_AI_API_KEY=your_api_key
    ```
 
-## 📋 Available Scripts
+#### Scripts
+- `pnpm dev`: Start local development server.
+- `pnpm dev:vercel`: Run locally with Vercel serverless environment.
+- `pnpm build`: Compile and type-check for production.
+- `pnpm lint`: Run ESLint and check for coding standard violations.
+- `pnpm test`: Execute Cypress component and E2E tests.
 
-All scripts are defined in `package.json` and can be run with `pnpm <script-name>`:
+### 🏗️ Architecture Summary
 
-### Development Scripts
+#### Directory Structure
+- `api/`: Serverless endpoints. Consolidated `auth.ts` handles all identity logic to stay within Vercel's hobby limits.
+- `src/components/exercises/`: Core vision training modules.
+- `src/components/games/`: Binocular anaglyph games.
+- `src/components/therapy/`: Compliance tools (Timer, Badges, Streak Calendar).
+- `src/hooks/`: Custom logic for Auth, Snackbar, and Anaglyph rendering.
 
-- **`pnpm dev`** - Start development server with hot reload
-- **`pnpm dev:vercel`** - Start development server with Vercel functions (routes to `/api`)
+---
 
-### Build Scripts
+## 🚦 Coding Guidelines & Standards
 
-- **`pnpm build`** - Build for production (includes type checking)
-- **`pnpm preview`** - Preview production build locally
+To maintain the clinical integrity and technical performance of the application, all contributors must adhere to the following:
 
-### Code Quality Scripts
+### 1. Activity Fullscreen Mandate
+All game and exercise components **must** implement a fullscreen mode upon starting. Use a `containerRef` and the `requestFullscreen()` API to ensure an immersive experience free of browser distractions.
 
-- **`pnpm lint`** - Run ESLint on all files
+### 2. Vercel Hobby Plan Compliance
+The application is optimized for Vercel's free tier.
+- **Consolidate APIs:** Do not create a separate file for every small function. Group related logic (like authentication) into single dispatcher files in the `api/` folder.
+- **Serverless Limits:** Stay under the 12-function limit.
 
-## 🏗️ Project Architecture
+### 3. Git Workflow
+- **Squash and Merge:** All pull requests should be "Squash and merged" to keep the main history linear and clean.
+- **Descriptive Commits:** Use prefix-based commit messages (e.g., `feat:`, `fix:`, `chore:`, `docs:`).
 
-### Frontend Structure
+### 4. Code Quality & Performance
+- **TypeScript Strictness:** Never use `any`. Define interfaces for all API responses and component props.
+- **Surgical Edits:** Avoid large refactors unless necessary. Focus on the task at hand to keep PRs reviewable.
+- **Testing:** New features must include either a Cypress component test or an E2E test. Empirical verification is required for all bug fixes.
 
-```bash
-src/
-├── components/
-│   ├── dashboard/       # Child & Parent progress views
-│   ├── exercises/       # Vision training (Brock String, Pursuit, Saccades, Focus, etc.)
-│   ├── games/           # Anaglyph Red-Blue games (Snake, Bubble Pop)
-│   ├── therapy/         # Patching timer, Streaks, Badges
-│   ├── Controls.tsx     # Font & Topic controls
-│   ├── NavBar.tsx       # Navigation
-│   ├── StoryDisplay.tsx # Story rendering with TTS
-│   └── StoryGenerator.tsx # AI story generation with therapy context
-├── context/             # React context (Snackbar, Preloader)
-├── hooks/               # Custom hooks (Auth, UI state)
-├── pages/               # Page-level components
-├── App.tsx             # Main router
-└── main.tsx            # Entry point
-```
-
-### Backend API Structure
-
-```bash
-api/
-├── auth.ts              # Consolidated Auth (Login, Signup, Logout, Me)
-├── get-all-sessions.ts  # Session history retrieval
-├── get-progress-summary.ts # Dashboard data aggregation
-├── save-game-score.ts    # Exercise & Game results
-├── save-patching-session.ts # Patching timer persistence
-├── get-patching-history.ts  # Calendar data
-├── update-snake-level.ts    # Game progress persistence
-└── save-characters.ts    # Character customization persistence
-```
-
-## 🛠️ Technology Stack
-
-- **Frontend:** React 19, TypeScript, Vite, Tailwind CSS, DaisyUI.
-- **Backend:** Vercel Functions (Serverless), MongoDB, JWT, bcryptjs.
-- **AI:** Google Generative AI (Gemini).
-- **Testing:** Cypress (E2E and Component).
-
-
-### Development Tools
-
-- **ESLint** - Code linting
-- **TypeScript ESLint** - TypeScript-specific linter
-- **PostCSS** - CSS processing
-- **Autoprefixer** - CSS vendor prefixes
-
-## 🚦 Development Workflow
-
-1. **Start Development**
-
-   ```bash
-   pnpm dev
-   ```
-
-2. **Run with API Functions**
-
-   ```bash
-   pnpm dev:vercel
-   ```
-
-3. **Lint Code**
-
-   ```bash
-   pnpm lint
-   ```
-
-4. **Build for Production**
-
-   ```bash
-   pnpm build
-   ```
-
-5. **Preview Build**
-
-   ```bash
-   pnpm preview
-   ```
-
-## 🌐 Deployment
-
-The application is configured for deployment on Vercel:
-
-- **GitHub Actions** - Automated deployment pipeline (`.github/workflows/deploy.yml`)
-- **Vercel Config** - Project configuration (`vercel.json`)
-- **Environment Variables** - Set in Vercel dashboard
-
-## 🧪 Testing
-
-This project uses Cypress for comprehensive component and end-to-end testing. To learn about setting up and writing test cases, refer to our detailed testing guide:
-
-**[📋 Cypress Testing Setup Guide](./cypress_setup_guide.md)**
-
-The testing guide covers:
-
-- Component testing configuration
-- End-to-end testing setup
-- Writing effective test specs
-- Best practices and common patterns
-
-### Quick Test Commands
-
-```bash
-# Open Cypress test runner
-npx cypress open
-
-# Run tests headlessly
-npx cypress run
-
-# Run only component tests
-npx cypress run --component
-
-# Run only E2E tests
-npx cypress run --e2e
-```
+---
 
 ## 📄 License
-
-MIT License - see [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
