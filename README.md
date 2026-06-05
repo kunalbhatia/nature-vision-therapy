@@ -6,11 +6,11 @@ A comprehensive React + TypeScript + Vite application for vision therapy through
 
 - 🤖 **AI Story Generation** - Dynamic story creation using Google's Generative AI, integrated with therapy progress and Text-to-Speech (Read Aloud).
 - 👁️ **Vision Therapy Suite** - Clinically-focused exercises:
-  - **3D Anaglyph Training:** **Virtual Brock String**, Snake, and Bubble Pop for binocular fusion and physiological diplopia training.
-  - **Monocular & Tracking:** Dot Tracing, Near-Far Focus, Character Hunt, Saccade Training, and Smooth Pursuit.
+  - **3D Anaglyph Training:** **Virtual Brock String**, **Anaglyph Snake**, and **Anaglyph Bubble Pop** for binocular fusion and physiological diplopia training.
+  - **Monocular & Tracking:** **Dot Tracing**, **Near-Far Focus**, **Character Hunt**, **Saccade Training**, and **Smooth Pursuit**.
 - ⏱️ **Patching Compliance** - Integrated timer, streak tracking, and milestone badges.
 - 📊 **Progress Dashboards** - Dedicated views for Child (XP/Levels) and Parent (Compliance/History).
-- 👤 **User Authentication** - Secure login/signup with JWT and MongoDB (Consolidated API).
+- 👤 **User Authentication** - Secure login/signup with JWT and MongoDB (Consolidated `auth.ts` API).
 - 🎨 **Personalization** - Customizable user preferences and settings.
 - 📖 **Adjustable Reading Experience** - Font size controls and nature-inspired UI.
 - 📱 **Responsive & Immersive** - Fullscreen support for all activities on mobile and desktop.
@@ -29,8 +29,8 @@ A comprehensive React + TypeScript + Vite application for vision therapy through
 1. **Clone the repository**
 
    ```bash
-   git clone <repository-url>
-   cd nature-theme-vision-therapy
+   git clone https://github.com/kunalbhatia/nature-vision-therapy.git
+   cd nature-vision-therapy
    ```
 
 2. **Install dependencies**
@@ -93,11 +93,13 @@ src/
 ```bash
 api/
 ├── auth.ts              # Consolidated Auth (Login, Signup, Logout, Me)
+├── get-all-sessions.ts  # Session history retrieval
 ├── get-progress-summary.ts # Dashboard data aggregation
 ├── save-game-score.ts    # Exercise & Game results
 ├── save-patching-session.ts # Patching timer persistence
 ├── get-patching-history.ts  # Calendar data
-└── update-snake-level.ts    # Game progress persistence
+├── update-snake-level.ts    # Game progress persistence
+└── save-characters.ts    # Character customization persistence
 ```
 
 ## 🛠️ Technology Stack
