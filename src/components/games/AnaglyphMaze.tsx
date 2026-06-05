@@ -42,7 +42,7 @@ function generateMaze(cols: number, rows: number) {
 }
 
 export default function AnaglyphMaze() {
-  const { score, incrementScore, saveScore, resetScore } = useGameScore();
+  const { score, incrementScore, resetScore } = useGameScore();
   const [maze, setMaze] = useState<number[][]>([]);
   const [wallColors, setWallColors] = useState<('red' | 'cyan' | null)[][]>([]);
   const [player, setPlayer] = useState({ x: 0, y: 0 });
@@ -50,7 +50,7 @@ export default function AnaglyphMaze() {
   const [level, setLevel] = useState(1);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const initLevel = useCallback((lvl: number) => {
+  const initLevel = useCallback(() => {
     const { maze: newMaze, wallColors: newColors } = generateMaze(COLS, ROWS);
     setMaze(newMaze);
     setWallColors(newColors);
@@ -64,7 +64,7 @@ export default function AnaglyphMaze() {
     resetScore();
     setLevel(1);
     setGameStarted(true);
-    initLevel(1);
+    initLevel();
   };
 
   const movePlayer = useCallback((dx: number, dy: number) => {
@@ -76,7 +76,7 @@ export default function AnaglyphMaze() {
           setTimeout(() => {
             const nextLvl = level + 1;
             setLevel(nextLvl);
-            initLevel(nextLvl);
+            initLevel();
             incrementScore(100);
           }, 300);
         }
