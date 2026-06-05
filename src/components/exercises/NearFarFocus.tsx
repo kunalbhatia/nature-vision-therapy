@@ -1,5 +1,7 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 import { useSnackbar } from '../../hooks/Snackbar';
+import ExerciseTimer from './ExerciseTimer';
+import { FaEye, FaSearchPlus, FaSearchMinus } from 'react-icons/fa';
 
 interface NearFarFocusProps {
   onComplete?: (score: number) => void;
@@ -7,59 +9,40 @@ interface NearFarFocusProps {
 
 export default function NearFarFocus({ onComplete }: NearFarFocusProps) {
   const { showMessage } = useSnackbar();
-  const [size, setSize] = useState(10);
-  const [direction, setDirection] = useState<'near' | 'far'>('far');
-  const [isActive, setIsActive] = useState(false);
-  const [timeLeft, setTimeLeft] = useState(60);
+  const [sessionActive, setSessionActive] = useState(false);
+  const [timerActive, setTimerActive] = useState(false);
+  const [isNear, setIsNear] = useState(true);
   const containerRef = useRef<HTMLDivElement>(null);
-  
-  const words = ['VISION', 'POWER', 'EYES', 'FOCUS', 'SUPER', 'HEALTH', 'BRAVE', 'NATURE'];
-  const [currentWord, setCurrentWord] = useState(words[0]);
 
+  const setFocus = useCallback((near: boolean) => {
+    setIsNear(near);
+    setTimerActive(true);
+  }, []);
+
+  // Keyboard controls
   useEffect(() => {
-    let interval: ReturnType<typeof setInterval>;
-    if (isActive && timeLeft > 0) {
-      interval = setInterval(() => {
-        setSize(prev => {
-          if (direction === 'far') {
-            if (prev <= 1) {
-              setDirection('near');
-              setCurrentWord(words[Math.floor(Math.random() * words.length)]);
-              return 1;
-            }
-            return prev - 0.2;
-          } else {
-            if (prev >= 15) {
-              setDirection('far');
-              setCurrentWord(words[Math.floor(Math.random() * words.length)]);
-              return 15;
-            }
-            return prev + 0.2;
-          }
-        });
-      }, 50);
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (!sessionActive) return;
+      if (e.key === 'ArrowUp') setFocus(true);
+      if (e.key === 'ArrowDown') setFocus(false);
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [sessionActive, setFocus]);
 
-      const timer = setInterval(() => setTimeLeft(prev => prev - 1), 1000);
-      return () => {
-        clearInterval(interval);
-        clearInterval(timer);
-      };
-    } else if (timeLeft === 0 && isActive) {
-      handleFinish();
-    }
-  }, [isActive, timeLeft, direction]);
-
-  const handleFinish = async () => {
-    setIsActive(false);
-    showMessage("Exercise Complete!", 'success');
+  const handleSessionComplete = async () => {
+    setSessionActive(false);
+    setTimerActive(false);
+    showMessage('Pencil Pushup Mission Complete!', 'success');
+    
     try {
       await fetch('/api/save-game-score', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           gameId: 'near-far',
-          score: 100, // Fixed score for completion
-          durationSeconds: 60,
+          score: 100,
+          durationSeconds: 120,
           date: new Date().toISOString().split('T')[0]
         })
       });
@@ -69,65 +52,111 @@ export default function NearFarFocus({ onComplete }: NearFarFocusProps) {
     }
   };
 
-  const startExercise = () => {
+  const startSession = () => {
     if (containerRef.current) {
       containerRef.current.requestFullscreen().catch(() => {});
     }
-    setIsActive(true);
-    setTimeLeft(60);
-    setSize(10);
+    setSessionActive(true);
+    setTimerActive(false);
   };
 
   return (
-    <div className="flex flex-col items-center w-full max-w-4xl" ref={containerRef}>
-      <div className="w-full flex justify-between items-center mb-6 px-4">
-        <h2 className="text-2xl font-bold text-blue-800">Near-Far Focus</h2>
-        <span className="text-xl font-bold text-orange-600">Time: {timeLeft}s</span>
-      </div>
-
-      <div className="relative w-full aspect-video bg-white rounded-3xl border-4 border-blue-100 shadow-inner overflow-hidden flex items-center justify-center">
-        {!isActive && (
-          <div className="absolute inset-0 z-50 flex flex-col items-center justify-center bg-black/50 backdrop-blur-sm text-white rounded-2xl">
-            <h3 className="text-3xl font-black mb-4 uppercase tracking-widest">Acommodation Training</h3>
-            <p className="mb-8 text-lg max-w-md text-center">
-              Watch the word as it grows and shrinks. <br/>
-              <span className="font-bold text-yellow-400">Keep it in clear focus!</span>
-            </p>
-            <button 
-              onClick={startExercise} 
-              className="btn btn-primary btn-lg px-12 rounded-2xl shadow-xl hover:scale-105 transition-transform"
-            >
-              Start Exercise
-            </button>
+    <div className="flex flex-col items-center justify-center w-full max-w-5xl h-full p-2 sm:p-4" ref={containerRef}>
+      {!sessionActive ? (
+        <div className="bg-white/90 backdrop-blur-md p-10 rounded-[3rem] shadow-2xl border-4 border-emerald-100 text-center max-w-xl animate-in zoom-in duration-500">
+          <div className="w-24 h-24 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-6">
+            <FaEye className="text-5xl text-emerald-600" />
           </div>
-        )}
-
-        <div 
-          className="font-black text-blue-900 transition-all duration-75 select-none"
-          style={{ fontSize: `${size}rem` }}
-        >
-          {currentWord}
-        </div>
-
-        <div className="absolute bottom-8 text-lg font-bold text-gray-400 uppercase tracking-[1rem]">
-          {direction === 'far' ? 'Moving Away...' : 'Coming Closer...'}
-        </div>
-      </div>
-
-      <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
-        <div className="bg-blue-50 p-6 rounded-3xl border border-blue-100">
-          <h4 className="font-bold text-blue-800 mb-2">How it works</h4>
-          <p className="text-sm text-blue-700 leading-relaxed">
-            This trains your eye&apos;s focusing muscle (accommodation) to quickly adjust between near and far objects.
+          <h2 className="text-4xl font-black text-green-900 mb-4 tracking-tight">Virtual Pencil Pushup</h2>
+          <p className="text-green-800/70 mb-8 text-lg leading-relaxed">
+            Focus on the tip of the pencil as it moves. Try to keep it as a single, clear image. This trains your eyes to work together and focus accurately.
           </p>
+          <button 
+            onClick={startSession}
+            className="px-16 py-4 bg-emerald-600 hover:bg-emerald-500 text-white text-xl font-black rounded-3xl shadow-xl transition-all transform hover:scale-105 active:scale-95"
+          >
+            Start Mission
+          </button>
         </div>
-        <div className="bg-green-50 p-6 rounded-3xl border border-green-100">
-          <h4 className="font-bold text-green-800 mb-2">Instructions</h4>
-          <p className="text-sm text-green-700 leading-relaxed">
-            Try to keep the letters sharp. If they become blurry, blink and try to &quot;push&quot; your focus until they are clear again.
-          </p>
+      ) : (
+        <div className="w-full h-full flex flex-col items-center gap-4 relative">
+          {/* Header Controls - Now more compact */}
+          <div className="flex justify-between w-full max-w-4xl items-center px-4">
+             <div className="flex flex-col bg-white/80 backdrop-blur-sm px-3 py-1.5 rounded-xl border border-white/40 shadow-sm">
+                <span className="text-[9px] font-black text-gray-500 uppercase tracking-widest">Target</span>
+                <span className={`text-sm font-black ${isNear ? 'text-emerald-600' : 'text-blue-600'}`}>
+                  {isNear ? 'NEAR' : 'FAR'}
+                </span>
+             </div>
+              {/* Small fixed timer at the top */}
+              <div className="scale-50 origin-right -mr-4">
+                 <ExerciseTimer 
+                   initialDuration={120} 
+                   onComplete={handleSessionComplete} 
+                   isActive={timerActive}
+                   onActiveChange={setTimerActive}
+                 />
+              </div>
+          </div>
+
+          {/* Main Exercise Viewport */}
+          <div className="relative w-full flex-1 min-h-[400px] aspect-video bg-emerald-50/50 rounded-[2.5rem] border-4 border-white shadow-inner flex items-center justify-center overflow-hidden">
+            
+            {/* Instruction Label - Top Right, Static */}
+            <div className="absolute top-4 right-4 px-4 py-1.5 bg-white rounded-full border-2 border-gray-200 shadow-lg z-30">
+              <span className="text-[12px] font-black text-black tracking-tight uppercase">Focus on Tip</span>
+            </div>
+
+            {/* Focal Point (Pencil Tip) - Anchored at the Tip */}
+            <div 
+              className={`transition-all duration-[4000ms] ease-in-out flex flex-col items-center origin-top
+                ${isNear ? 'scale-[3.0] translate-y-[100px]' : 'scale-[0.6] opacity-40 -translate-y-[40px]'}
+              `}
+            >
+              {/* Virtual Pencil Visual - Exact 40px alignment */}
+              <div className="relative flex flex-col items-center">
+                {/* Tip at Top - Total Width 40px (20+20) */}
+                <div className="relative z-10 w-0 h-0 border-l-[20px] border-r-[20px] border-b-[44px] border-l-transparent border-r-transparent border-b-orange-200" />
+                {/* Graphite - Width 16px (8+8) */}
+                <div className="absolute top-0 z-20 w-0 h-0 border-l-[8px] border-r-[8px] border-b-[18px] border-l-transparent border-r-transparent border-b-gray-800" />
+                
+                {/* Body - Width 36px + 4px borders = 40px */}
+                <div className="w-9 h-48 bg-yellow-400 border-x-2 border-yellow-600 shadow-sm relative -mt-[1px]">
+                   {/* Ferrules and Eraser at Bottom - Width 40px total */}
+                   <div className="absolute bottom-0 left-[-2px] w-[40px] flex flex-col items-center">
+                     <div className="w-full h-2 bg-gray-400 border-x-2 border-gray-500" />
+                     <div className="w-full h-8 bg-pink-400 rounded-b-lg border-x-2 border-b-2 border-pink-600 shadow-inner" />
+                   </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Manual Controls - Re-positioned inside the container */}
+            <div className="absolute bottom-4 right-4 flex flex-col gap-2">
+              <button 
+                onClick={() => setFocus(true)}
+                className={`btn btn-circle btn-md shadow-lg transition-all ${isNear ? 'bg-emerald-600 text-white' : 'bg-white text-emerald-600'}`}
+                title="Near Focus (Arrow Up)"
+              >
+                <FaSearchPlus />
+              </button>
+              <button 
+                onClick={() => setFocus(false)}
+                className={`btn btn-circle btn-md shadow-lg transition-all ${!isNear ? 'bg-blue-600 text-white' : 'bg-white text-blue-600'}`}
+                title="Far Focus (Arrow Down)"
+              >
+                <FaSearchMinus />
+              </button>
+            </div>
+          </div>
+
+          <div className="bg-white px-4 py-2 rounded-xl border border-gray-200 max-w-lg text-center shadow-sm">
+             <p className="text-black text-[10px] sm:text-xs font-bold">
+               Use <kbd className="kbd kbd-xs bg-gray-100 text-black border-gray-300">↑</kbd> and <kbd className="kbd kbd-xs bg-gray-100 text-black border-gray-300">↓</kbd> or the buttons to focus.
+             </p>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }

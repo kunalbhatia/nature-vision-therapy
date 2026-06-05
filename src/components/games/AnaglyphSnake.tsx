@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useSnackbar } from '../../hooks/Snackbar';
+import { useGameScore } from '../../hooks/useGameScore';
 import { FaArrowUp, FaArrowDown, FaArrowLeft, FaArrowRight, FaMobileAlt, FaTrophy } from 'react-icons/fa';
 import AnaglyphWrapper, { RedEye, CyanEye, BothEyes } from './AnaglyphWrapper';
 
@@ -19,10 +20,10 @@ interface Food {
 
 export default function AnaglyphSnake() {
   const { showMessage } = useSnackbar();
+  const { score, setScore, incrementScore, saveScore } = useGameScore();
   const [snake, setSnake] = useState(INITIAL_SNAKE);
   const [direction, setDirection] = useState(INITIAL_DIRECTION);
   const [foods, setFoods] = useState<Food[]>([]);
-  const [score, setScore] = useState(0);
   const [level, setLevel] = useState(1);
   const [highestLevel, setHighestLevel] = useState(1);
   const [gameOver, setGameOver] = useState(false);
@@ -98,7 +99,7 @@ export default function AnaglyphSnake() {
       // Check food collision
       const foodIndex = foods.findIndex(f => f.x === newHead.x && f.y === newHead.y);
       if (foodIndex !== -1) {
-        setScore(s => s + 10);
+        incrementScore(10);
         const remainingFoods = foods.filter((_, i) => i !== foodIndex);
         setFoods(remainingFoods);
         
@@ -112,7 +113,7 @@ export default function AnaglyphSnake() {
 
       return newSnake;
     });
-  }, [direction, foods]);
+  }, [direction, foods, incrementScore]);
 
   const handleLevelComplete = useCallback(() => {
     const nextLvl = level + 1;
@@ -161,22 +162,11 @@ export default function AnaglyphSnake() {
     setGameStarted(false);
     if (gameLoopRef.current) clearInterval(gameLoopRef.current);
     
-    showMessage(`Game Over! Final Score: ${score}`, 'error');
-
-    try {
-      await fetch('/api/save-game-score', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          gameId: 'snake',
-          score,
-          durationSeconds: 0,
-          date: new Date().toISOString().split('T')[0]
-        })
-      });
-    } catch (error) {
-      console.error('Failed to save score:', error);
-    }
+    saveScore({
+      gameId: 'snake',
+      score,
+      durationSeconds: 0 // Could be tracked
+    });
   };
 
   const startGame = () => {

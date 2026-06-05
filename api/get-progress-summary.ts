@@ -78,7 +78,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       level: Math.floor(totalXP / 500) + 1,
       nextLevelXP: 500 - (totalXP % 500),
       highestSnakeLevel: user?.highestSnakeLevel || 1,
-      lastExerciseType: lastSession?.sessionType || null
+      lastExerciseType: lastSession?.sessionType || null,
+      therapyGoals: user?.therapyGoals || { dailyPatchingMinutes: 60, exercisesPerDay: 5 }
     });
   } catch (err) {
     console.error('Get summary error:', err);

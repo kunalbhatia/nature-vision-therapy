@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import { FaFileDownload, FaCalendarAlt, FaHistory } from 'react-icons/fa';
+import { FaFileDownload, FaCalendarAlt, FaHistory, FaBullseye, FaSave } from 'react-icons/fa';
+import { useSnackbar } from '../../hooks/Snackbar';
 
 interface Session {
   sessionType: string;
@@ -9,15 +10,47 @@ interface Session {
   completedAt: string;
 }
 
+interface TherapyGoals {
+  dailyPatchingMinutes: number;
+  exercisesPerDay: number;
+}
+
 export default function ParentDashboard() {
   const [history, setHistory] = useState<Session[]>([]);
+  const [goals, setGoals] = useState<TherapyGoals>({ dailyPatchingMinutes: 60, exercisesPerDay: 5 });
+  const [isSaving, setIsSaving] = useState(false);
+  const { showMessage } = useSnackbar();
 
   useEffect(() => {
     fetch('/api/get-all-sessions')
       .then(res => res.json())
       .then(data => setHistory(data.history || []))
       .catch(err => console.error('Failed to fetch history:', err));
+
+    fetch('/api/get-progress-summary')
+      .then(res => res.json())
+      .then(data => {
+        if (data.therapyGoals) setGoals(data.therapyGoals);
+      })
+      .catch(err => console.error('Failed to fetch goals:', err));
   }, []);
+
+  const handleSaveGoals = async () => {
+    setIsSaving(true);
+    try {
+      const res = await fetch('/api/update-user-settings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ therapyGoals: goals })
+      });
+      const data = await res.json();
+      showMessage(data.message, data.status);
+    } catch {
+      showMessage('Failed to save goals', 'error');
+    } finally {
+      setIsSaving(false);
+    }
+  };
 
   const totalPatchingMinutes = history
     .filter(s => s.sessionType === 'patching')
@@ -30,6 +63,43 @@ export default function ParentDashboard() {
         <button className="inline-flex items-center gap-2 px-6 py-2.5 bg-green-600 hover:bg-green-700 text-white font-bold rounded-2xl shadow-md transition-all active:scale-95 whitespace-nowrap">
           <FaFileDownload /> Export Progress Report
         </button>
+      </div>
+
+      {/* Goals Customization */}
+      <div className="bg-emerald-50 p-6 rounded-3xl border border-emerald-100 shadow-sm flex flex-col md:flex-row gap-6 items-center">
+        <div className="flex-1">
+          <h3 className="text-xl font-black text-emerald-900 flex items-center gap-2 mb-2">
+            <FaBullseye /> Therapy Goals
+          </h3>
+          <p className="text-emerald-800/70 text-sm">Customize daily targets to keep your child on track.</p>
+        </div>
+        <div className="flex flex-wrap gap-4 items-end">
+          <div className="flex flex-col gap-1">
+            <label className="text-[10px] font-black text-emerald-600 uppercase tracking-widest ml-1">Daily Patching (min)</label>
+            <input 
+              type="number" 
+              value={goals.dailyPatchingMinutes}
+              onChange={(e) => setGoals({ ...goals, dailyPatchingMinutes: parseInt(e.target.value) || 0 })}
+              className="input input-bordered bg-white border-emerald-200 focus:border-emerald-500 rounded-xl w-32 font-bold"
+            />
+          </div>
+          <div className="flex flex-col gap-1">
+            <label className="text-[10px] font-black text-emerald-600 uppercase tracking-widest ml-1">Daily Exercises</label>
+            <input 
+              type="number" 
+              value={goals.exercisesPerDay}
+              onChange={(e) => setGoals({ ...goals, exercisesPerDay: parseInt(e.target.value) || 0 })}
+              className="input input-bordered bg-white border-emerald-200 focus:border-emerald-500 rounded-xl w-32 font-bold"
+            />
+          </div>
+          <button 
+            onClick={handleSaveGoals}
+            disabled={isSaving}
+            className="btn btn-emerald-600 bg-emerald-600 hover:bg-emerald-700 text-white border-none rounded-xl px-6 flex items-center gap-2"
+          >
+            {isSaving ? <span className="loading loading-spinner loading-sm"></span> : <FaSave />} Save Goals
+          </button>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">

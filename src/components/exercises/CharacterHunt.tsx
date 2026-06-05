@@ -1,6 +1,8 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useCallback, useRef } from 'react';
 import { useSnackbar } from '../../hooks/Snackbar';
 import AnaglyphWrapper, { RedEye, CyanEye } from '../games/AnaglyphWrapper';
+import ExerciseTimer from './ExerciseTimer';
+import DeviceRestriction from '../DeviceRestriction';
 
 interface CharacterHuntProps {
   onComplete?: (score: number) => void;
@@ -16,7 +18,6 @@ export default function CharacterHunt({ onComplete }: CharacterHuntProps) {
   const [grid, setGrid] = useState<GridItem[]>([]);
   const [targetChar, setTargetChar] = useState('');
   const [score, setScore] = useState(0);
-  const [timeLeft, setTimeLeft] = useState(60);
   const [isActive, setIsActive] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   
@@ -45,15 +46,6 @@ export default function CharacterHunt({ onComplete }: CharacterHuntProps) {
     setGrid(newGrid);
   }, []);
 
-  useEffect(() => {
-    if (isActive && timeLeft > 0) {
-      const timer = setInterval(() => setTimeLeft(prev => prev - 1), 1000);
-      return () => clearInterval(timer);
-    } else if (timeLeft === 0 && isActive) {
-      handleFinish();
-    }
-  }, [isActive, timeLeft]);
-
   const handleFinish = async () => {
     setIsActive(false);
     showMessage(`Exercise Complete! Score: ${score}`, 'success');
@@ -64,7 +56,7 @@ export default function CharacterHunt({ onComplete }: CharacterHuntProps) {
         body: JSON.stringify({
           gameId: 'character-hunt',
           score,
-          durationSeconds: 60,
+          durationSeconds: 120,
           date: new Date().toISOString().split('T')[0]
         })
       });
@@ -83,57 +75,66 @@ export default function CharacterHunt({ onComplete }: CharacterHuntProps) {
     }
   };
 
-  const startExercise = () => {
+  const startExercise = async () => {
     if (containerRef.current) {
-      containerRef.current.requestFullscreen().catch(() => {});
+      try {
+        await containerRef.current.requestFullscreen();
+      } catch (err) {
+        console.warn("Fullscreen request failed:", err);
+      }
     }
     setScore(0);
-    setTimeLeft(60);
     setIsActive(true);
     generateGrid();
   };
 
   return (
-    <div className="flex flex-col items-center w-full max-w-4xl" ref={containerRef}>
-      <div className="w-full flex justify-between items-center mb-6 px-4">
-        <h2 className="text-2xl font-bold text-purple-800">Anaglyph Character Hunt</h2>
-        <div className="flex gap-8 text-xl font-bold">
-          <span className="text-blue-600">Score: {score}</span>
-          <span className="text-orange-600">Time: {timeLeft}s</span>
-        </div>
-      </div>
-
-      <div className="relative w-full bg-white rounded-3xl border-4 border-purple-100 shadow-xl p-8 min-h-[500px] flex items-center justify-center">
+    <DeviceRestriction>
+      <div className="flex flex-col items-center w-full h-full p-2 bg-purple-50/30 overflow-hidden" ref={containerRef}>
         {!isActive ? (
-          <div className="absolute inset-0 z-50 flex flex-col items-center justify-center bg-black/50 backdrop-blur-sm text-white rounded-2xl">
-            <h3 className="text-3xl font-black mb-4 uppercase tracking-widest text-center">Binocular Acuity Training</h3>
-            <p className="mb-8 text-lg max-w-md text-center px-6">
-              Put on your red-blue glasses! <br/>
-              Find the target character. Some are red, some are blue!
-            </p>
-            <button 
-              onClick={startExercise} 
-              className="btn btn-primary btn-lg px-12 rounded-2xl shadow-xl hover:scale-105 transition-transform"
-            >
-              Start Exercise
-            </button>
+          <div className="flex-1 flex flex-col items-center justify-center w-full">
+            <div className="bg-white p-10 rounded-[3rem] shadow-2xl border-4 border-purple-100 text-center max-w-xl animate-in zoom-in duration-500">
+              <h3 className="text-4xl font-black mb-4 uppercase tracking-widest text-purple-900">Character Hunt</h3>
+              <p className="mb-8 text-lg text-gray-700 text-center px-6">
+                Put on your **Red-Blue glasses**! <br/>
+                Find the target character in the grid as fast as you can.
+              </p>
+              <button 
+                onClick={startExercise} 
+                className="px-16 py-4 bg-purple-600 hover:bg-purple-500 text-white text-xl font-black rounded-3xl shadow-xl transition-all transform hover:scale-105 active:scale-95"
+              >
+                Start Mission
+              </button>
+            </div>
           </div>
         ) : (
-          <div className="flex flex-col items-center w-full">
-            <div className="mb-8 p-6 bg-purple-50 rounded-2xl border-2 border-purple-200 text-center">
-              <span className="text-gray-500 font-bold uppercase text-xs tracking-widest mb-1 block">Find this target:</span>
-              <span className="text-6xl font-black text-purple-900">{targetChar}</span>
+          <div className="w-full h-full flex flex-col items-center gap-4 relative py-4">
+            <div className="flex justify-between w-full max-w-6xl items-center px-8">
+              <div className="flex flex-col bg-white px-4 py-2 rounded-2xl border-2 border-purple-200 shadow-md">
+                <span className="text-[10px] font-black text-gray-500 uppercase tracking-widest">Find Target</span>
+                <span className="text-4xl font-black text-purple-900 leading-none">{targetChar}</span>
+              </div>
+              <div className="flex items-center gap-6">
+                <div className="bg-white px-6 py-2 rounded-2xl border-2 border-purple-200 shadow-md">
+                  <span className="text-xl font-black text-blue-600 uppercase tracking-tighter">XP: {score}</span>
+                </div>
+                <div className="scale-75 origin-right">
+                  <ExerciseTimer initialDuration={120} onComplete={handleFinish} />
+                </div>
+              </div>
             </div>
-            
-            <div className="w-full max-w-3xl min-h-[400px]">
+
+            <div className="relative w-full flex-1 max-w-6xl bg-white rounded-[3rem] border-8 border-purple-100 shadow-2xl overflow-hidden mx-4">
               <AnaglyphWrapper>
-                <div className="grid grid-cols-6 md:grid-cols-8 gap-3 p-6">
+                <div className="grid grid-cols-6 md:grid-cols-8 gap-4 p-8 h-full items-stretch">
                   {grid.map((item, i) => {
                     const Button = (
                       <button
                         onClick={() => handleCharClick(item.char)}
-                        className={`w-full aspect-square flex items-center justify-center text-3xl font-black rounded-xl border-2 transition-all active:scale-95 shadow-sm
-                          ${item.eye === 'red' ? 'bg-red-500/20 border-red-500 text-red-600' : 'bg-cyan-500/20 border-cyan-500 text-cyan-600'}
+                        className={`w-full h-full flex items-center justify-center text-4xl font-black rounded-[2rem] border-4 transition-all active:scale-90 shadow-lg
+                          ${item.eye === 'red' 
+                            ? 'bg-red-500 border-red-700 text-black shadow-red-200' 
+                            : 'bg-cyan-500 border-cyan-700 text-black shadow-cyan-200'}
                         `}
                       >
                         {item.char}
@@ -141,32 +142,23 @@ export default function CharacterHunt({ onComplete }: CharacterHuntProps) {
                     );
 
                     return item.eye === 'red' ? (
-                      <RedEye key={i}>{Button}</RedEye>
+                      <RedEye key={i} className="h-full">{Button}</RedEye>
                     ) : (
-                      <CyanEye key={i}>{Button}</CyanEye>
+                      <CyanEye key={i} className="h-full">{Button}</CyanEye>
                     );
                   })}
                 </div>
               </AnaglyphWrapper>
             </div>
+
+            <div className="bg-white px-8 py-3 rounded-2xl border-2 border-purple-100 max-w-lg text-center shadow-lg">
+              <p className="text-black text-xs font-black uppercase tracking-widest">
+                Red = Right Eye | Blue = Left Eye. Use both to hunt!
+              </p>
+            </div>
           </div>
         )}
       </div>
-
-      <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
-        <div className="bg-purple-50 p-6 rounded-3xl border border-purple-100">
-          <h4 className="font-bold text-purple-800 mb-2">How it works</h4>
-          <p className="text-sm text-purple-700 leading-relaxed">
-            By making characters visible to only one eye at a time, we force your brain to use both eyes simultaneously to scan the grid. This treats suppression and builds binocular vision.
-          </p>
-        </div>
-        <div className="bg-blue-50 p-6 rounded-3xl border border-blue-100">
-          <h4 className="font-bold text-blue-800 mb-2">Instructions</h4>
-          <p className="text-sm text-blue-700 leading-relaxed">
-            Put on your red-blue glasses. Scan the grid and tap the target. Some will appear darker through one lens and disappear through the other!
-          </p>
-        </div>
-      </div>
-    </div>
+    </DeviceRestriction>
   );
 }
