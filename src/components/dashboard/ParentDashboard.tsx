@@ -45,7 +45,7 @@ export default function ParentDashboard() {
       });
       const data = await res.json();
       showMessage(data.message, data.status);
-    } catch (err) {
+    } catch {
       showMessage('Failed to save goals', 'error');
     } finally {
       setIsSaving(false);

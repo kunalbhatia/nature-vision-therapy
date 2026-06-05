@@ -117,7 +117,7 @@ export default function AnaglyphMaze() {
             <FaCompass className="text-7xl text-blue-400 mb-6 animate-pulse" />
             <h3 className="text-4xl font-black mb-4 uppercase tracking-widest text-blue-300">Ghost Maze Mission</h3>
             <p className="mb-8 text-xl opacity-80 max-w-md leading-relaxed">
-              "The walls are invisible to your Left eye, and the player is invisible to your Right eye. Merge your vision to escape!"
+              &quot;The walls are invisible to your Left eye, and the player is invisible to your Right eye. Merge your vision to escape!&quot;
             </p>
             <button 
               onClick={startGame} 
