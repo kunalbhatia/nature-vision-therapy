@@ -78,7 +78,7 @@ function App() {
           isLoggedIn={isLoggedIn}
         />
         
-        <div className="flex-1 min-h-screen flex flex-col items-center overflow-x-hidden">
+        <div className="flex-1 min-h-screen flex flex-col items-center overflow-x-hidden pt-16 md:pt-0">
           <main className="flex-1 w-full flex flex-col items-center p-4">
             <Routes>
               <Route

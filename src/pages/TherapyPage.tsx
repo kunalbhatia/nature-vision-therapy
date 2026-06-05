@@ -12,6 +12,7 @@ import SmoothPursuit from "../components/exercises/SmoothPursuit";
 import SaccadeTraining from "../components/exercises/SaccadeTraining";
 import AnaglyphSnake from "../components/games/AnaglyphSnake";
 import BrockString from "../components/exercises/BrockString";
+import DeviceRestriction from "../components/DeviceRestriction";
 
 export default function TherapyPage() {
   const location = useLocation();
@@ -123,15 +124,19 @@ export function PatchingTimerPage() {
 }
 
 export function AnaglyphGamesPage() { 
-  return <AnaglyphBubblePop />; 
+  return (
+    <DeviceRestriction>
+      <AnaglyphBubblePop />
+    </DeviceRestriction>
+  ); 
 }
 
 export function MonocularExercisesPage() { 
   const [active, setActive] = useState<'dot' | 'near-far' | 'hunt' | null>(null);
 
-  if (active === 'dot') return <DotTracing onComplete={() => setActive(null)} />;
-  if (active === 'near-far') return <NearFarFocus onComplete={() => setActive(null)} />;
-  if (active === 'hunt') return <CharacterHunt onComplete={() => setActive(null)} />;
+  if (active === 'dot') return <DeviceRestriction><DotTracing onComplete={() => setActive(null)} /></DeviceRestriction>;
+  if (active === 'near-far') return <DeviceRestriction><NearFarFocus onComplete={() => setActive(null)} /></DeviceRestriction>;
+  if (active === 'hunt') return <DeviceRestriction><CharacterHunt onComplete={() => setActive(null)} /></DeviceRestriction>;
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-4xl">
@@ -143,19 +148,35 @@ export function MonocularExercisesPage() {
 }
 
 export function PursuitExercisesPage() { 
-  return <SmoothPursuit />; 
+  return (
+    <DeviceRestriction>
+      <SmoothPursuit />
+    </DeviceRestriction>
+  ); 
 }
 
 export function SaccadeTrainingPage() { 
-  return <SaccadeTraining />; 
+  return (
+    <DeviceRestriction>
+      <SaccadeTraining />
+    </DeviceRestriction>
+  ); 
 }
 
 export function AnaglyphSnakePage() {
-  return <AnaglyphSnake />;
+  return (
+    <DeviceRestriction>
+      <AnaglyphSnake />
+    </DeviceRestriction>
+  );
 }
 
 export function BrockStringPage() {
-  return <BrockString />;
+  return (
+    <DeviceRestriction>
+      <BrockString />
+    </DeviceRestriction>
+  );
 }
 
 
