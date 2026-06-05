@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { FaStar, FaFire, FaChartBar, FaUserGraduate } from 'react-icons/fa';
 import StreakCalendar from '../therapy/StreakCalendar';
-import ComplianceBadges from '../therapy/ComplianceBadges';
+import AchievementBadges from '../therapy/AchievementBadges';
 
 interface ProgressSummary {
   childName: string;
@@ -15,6 +16,7 @@ interface ProgressSummary {
 
 export default function ChildDashboard() {
   const [summary, setSummary] = useState<ProgressSummary | null>(null);
+  const navigate = useNavigate();
 
   const [error, setError] = useState<string | null>(null);
 
@@ -112,7 +114,7 @@ export default function ChildDashboard() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <StreakCalendar />
-        <ComplianceBadges />
+        <AchievementBadges />
       </div>
 
       <div className="bg-purple-50 p-8 rounded-3xl border border-purple-100 flex flex-col items-center text-center">
@@ -121,7 +123,10 @@ export default function ChildDashboard() {
           Complete 20 minutes of patching and play 1 game today to unlock a special Nature Story!
         </p>
         <div className="flex gap-4">
-          <button className="btn btn-purple bg-purple-600 hover:bg-purple-700 text-white border-none rounded-2xl px-8 shadow-md">
+          <button 
+            onClick={() => navigate('/therapy')}
+            className="btn btn-purple bg-purple-600 hover:bg-purple-700 text-white border-none rounded-2xl px-8 shadow-md"
+          >
             Go to Therapy
           </button>
         </div>
