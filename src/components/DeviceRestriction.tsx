@@ -6,14 +6,15 @@ interface DeviceRestrictionProps {
 }
 
 const DeviceRestriction: React.FC<DeviceRestrictionProps> = ({ children }) => {
-  const [isMobile, setIsMobile] = useState(false);
+  const [isMobile, setIsMobile] = useState(() => 
+    typeof window !== 'undefined' ? window.innerWidth < 768 : false
+  );
 
   useEffect(() => {
     const checkSize = () => {
       setIsMobile(window.innerWidth < 768);
     };
     
-    checkSize();
     window.addEventListener('resize', checkSize);
     return () => window.removeEventListener('resize', checkSize);
   }, []);

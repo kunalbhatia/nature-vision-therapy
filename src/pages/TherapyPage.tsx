@@ -102,7 +102,13 @@ export default function TherapyPage() {
             <FaArrowLeft /> Back to Therapy Center
           </Link>
           <div className="bg-gray-50/50 rounded-3xl flex flex-col items-stretch border-4 border-dashed border-gray-100 min-h-[60vh]">
-            <Outlet />
+            {isPatching ? (
+              <Outlet />
+            ) : (
+              <DeviceRestriction>
+                <Outlet />
+              </DeviceRestriction>
+            )}
           </div>
         </div>
       )}
