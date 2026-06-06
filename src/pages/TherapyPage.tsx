@@ -14,10 +14,12 @@ import AnaglyphSnake from "../components/games/AnaglyphSnake";
 import AnaglyphHiddenPicture from "../components/games/AnaglyphHiddenPicture";
 import AnaglyphMaze from "../components/games/AnaglyphMaze";
 import BrockString from "../components/exercises/BrockString";
+import DeviceRestriction from "../components/DeviceRestriction";
 
 export default function TherapyPage() {
   const location = useLocation();
   const isBaseTherapy = location.pathname === "/therapy";
+  const isPatching = location.pathname.includes("/patching");
 
   const exercises = [
     { 
@@ -102,7 +104,13 @@ export default function TherapyPage() {
             <FaArrowLeft /> Back to Therapy Center
           </Link>
           <div className="bg-gray-50/50 rounded-3xl flex flex-col items-stretch border-4 border-dashed border-gray-100 min-h-[60vh]">
-            <Outlet />
+            {isPatching ? (
+              <Outlet />
+            ) : (
+              <DeviceRestriction>
+                <Outlet />
+              </DeviceRestriction>
+            )}
           </div>
         </div>
       )}
@@ -235,9 +243,3 @@ export function AnaglyphSnakePage() {
 export function BrockStringPage() {
   return <BrockString />;
 }
-
-
-
-
-
-
