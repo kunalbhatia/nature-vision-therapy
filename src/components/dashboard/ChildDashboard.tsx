@@ -161,7 +161,7 @@ export default function ChildDashboard() {
                 summary.weeklyChallenge.types.map(type => (
                   <span key={type} className="bg-indigo-500/40 px-3 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-wider border border-white/10">
                     {type.replace(/_/g, ' ')}
-                  </button>
+                  </span>
                 ))
               ) : (
                 <p className="text-indigo-200/60 text-sm italic">No exercises completed yet this week. Start your first mission!</p>
