@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { FaSignOutAlt, FaCog, FaHome, FaBook, FaHeartbeat, FaChartLine, FaBars, FaTimes, FaEllipsisV } from 'react-icons/fa';
+import { FaSignOutAlt, FaCog, FaHome, FaBook, FaHeartbeat, FaChartLine, FaBars, FaTimes, FaEllipsisV, FaSignInAlt, FaUserPlus } from 'react-icons/fa';
 
 type NavBarType = {
   onLogout?: () => void;
@@ -106,20 +106,48 @@ const Navbar = ({ onLogout, isLoggedIn }: NavBarType) => {
         </div>
 
         {/* Bottom Profile / Logout */}
-        {isLoggedIn && (
-          <button
-            onClick={onLogout}
-            className={`flex items-center gap-4 p-3 rounded-xl hover:bg-red-900/20 text-red-400 hover:text-red-300 transition-all text-left ${(!isExpanded && !isMobileOpen) && 'md:justify-center'}`}
-            title="Logout"
-          >
-            <FaSignOutAlt className="text-2xl shrink-0" />
-            {(isExpanded || isMobileOpen) && <span className="text-sm font-semibold">Logout</span>}
-          </button>
-        )}
+        <div className="flex flex-col gap-2">
+          {!isLoggedIn ? (
+            <>
+              <Link
+                to="/login"
+                className={`flex items-center gap-4 p-3 rounded-xl transition-all ${
+                  location.pathname === '/login'
+                    ? 'bg-emerald-500 text-green-950 font-bold shadow-md shadow-emerald-500/20' 
+                    : 'text-green-100 hover:bg-green-900/50 hover:text-white'
+                } ${(!isExpanded && !isMobileOpen) && 'md:justify-center'}`}
+                title="Login"
+              >
+                <FaSignInAlt className="text-xl shrink-0" />
+                {(isExpanded || isMobileOpen) && <span className="text-sm font-semibold">Login</span>}
+              </Link>
+              <Link
+                to="/signup"
+                className={`flex items-center gap-4 p-3 rounded-xl transition-all ${
+                  location.pathname === '/signup'
+                    ? 'bg-emerald-500 text-green-950 font-bold shadow-md shadow-emerald-500/20' 
+                    : 'text-green-100 hover:bg-green-900/50 hover:text-white'
+                } ${(!isExpanded && !isMobileOpen) && 'md:justify-center'}`}
+                title="Sign Up"
+              >
+                <FaUserPlus className="text-xl shrink-0" />
+                {(isExpanded || isMobileOpen) && <span className="text-sm font-semibold">Sign Up</span>}
+              </Link>
+            </>
+          ) : (
+            <button
+              onClick={onLogout}
+              className={`flex items-center gap-4 p-3 rounded-xl hover:bg-red-900/20 text-red-400 hover:text-red-300 transition-all text-left ${(!isExpanded && !isMobileOpen) && 'md:justify-center'}`}
+              title="Logout"
+            >
+              <FaSignOutAlt className="text-2xl shrink-0" />
+              {(isExpanded || isMobileOpen) && <span className="text-sm font-semibold">Logout</span>}
+            </button>
+          )}
+        </div>
       </nav>
     </>
   );
 };
 
 export default Navbar;
-
