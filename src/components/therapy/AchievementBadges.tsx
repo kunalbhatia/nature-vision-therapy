@@ -1,13 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { FaTrophy, FaStar, FaCrown, FaGamepad, FaRunning, FaCalendarCheck } from 'react-icons/fa';
 
-interface Session {
-  sessionType: string;
-  completedAt: string;
-  durationSeconds: number;
-  score: number;
-}
-
 interface Badge {
   id: string;
   name: string;

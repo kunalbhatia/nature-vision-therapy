@@ -150,7 +150,7 @@ function Controls({
         </select>
         {userLevel < 3 && (
           <p className="text-[10px] text-emerald-400 font-bold uppercase tracking-widest">
-            Level up your "Vision Power" to unlock more themes!
+            Level up your &quot;Vision Power&quot; to unlock more themes!
           </p>
         )}
       </div>

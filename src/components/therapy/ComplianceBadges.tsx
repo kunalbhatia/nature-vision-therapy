@@ -1,10 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { FaTrophy, FaStar, FaCrown } from 'react-icons/fa';
 
-interface Session {
-  completed: boolean;
-}
-
 interface Badge {
   id: string;
   name: string;

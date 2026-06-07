@@ -28,6 +28,7 @@ describe("Controls Component", () => {
         handlePause={handlePause}
         handleStop={handleStop}
         hasStory={false}
+        userLevel={1}
       />,
     );
   });
@@ -67,6 +68,7 @@ describe("Controls Component", () => {
         handlePause={handlePause}
         handleStop={handleStop}
         hasStory={true}
+        userLevel={1}
       />,
     );
     cy.get('[data-tip="Read Aloud"] button').should("exist").click();
