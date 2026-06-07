@@ -2,9 +2,6 @@ import { useEffect, useState } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import "./index.css";
 import Navbar from "./components/NavBar";
-import Modal from "./components/Modal";
-import LoginForm from "./components/LoginForm";
-import SignupForm from "./components/SignupForm";
 import { useSnackbar } from "./hooks/Snackbar";
 import useAuthStatus from "./hooks/AuthStatus";
 import { usePreloader } from "./hooks/Preloader";
@@ -24,14 +21,13 @@ import TherapyPage, {
   BrockStringPage
 } from "./pages/TherapyPage";
 import PersonalizePage from "./pages/PersonalizePage";
+import LoginPage from "./pages/LoginPage";
+import SignupPage from "./pages/SignupPage";
 
 function App() {
   const { showMessage } = useSnackbar();
   const { isLoggedIn: isAuthenticated, user } = useAuthStatus();
   const { showPreloader, hidePreloader } = usePreloader();
-  const [modalType, setModalType] = useState<
-    "login" | "signup" | null
-  >(null);
 
   const [isLoggedIn, setIsLoggedIn] = useState(isAuthenticated);
 
@@ -83,58 +79,35 @@ function App() {
             <Routes>
               <Route
                 path="/"
-                element={
-                  <HomePage
-                    isLoggedIn={isLoggedIn}
-                    onLogin={() => setModalType("login")}
-                    onSignup={() => setModalType("signup")}
-                  />
-                }
+                element={<HomePage isLoggedIn={isLoggedIn} />}
               />
-            <Route path="/stories" element={<StoriesPage />} />
-            
-            <Route path="/dashboard" element={<DashboardPage />}>
-              <Route index element={<Navigate to="/dashboard/child" replace />} />
-              <Route path="child" element={<ChildDashboard />} />
-              <Route path="parent" element={<ParentDashboard />} />
-            </Route>
+              <Route path="/login" element={<LoginPage onLoginSuccess={() => setIsLoggedIn(true)} />} />
+              <Route path="/signup" element={<SignupPage />} />
+              <Route path="/stories" element={<StoriesPage />} />
+              
+              <Route path="/dashboard" element={<DashboardPage />}>
+                <Route index element={<Navigate to="/dashboard/child" replace />} />
+                <Route path="child" element={<ChildDashboard />} />
+                <Route path="parent" element={<ParentDashboard />} />
+              </Route>
 
-            <Route path="/therapy" element={<TherapyPage />}>
-              <Route path="patching" element={<PatchingTimerPage />} />
-              <Route path="anaglyph" element={<AnaglyphGamesPage />} />
-              <Route path="monocular" element={<MonocularExercisesPage />} />
-              <Route path="pursuit" element={<PursuitExercisesPage />} />
-              <Route path="saccade" element={<SaccadeTrainingPage />} />
-              <Route path="brock-string" element={<BrockStringPage />} />
-              <Route path="snake" element={<AnaglyphSnakePage />} />
-            </Route>
+              <Route path="/therapy" element={<TherapyPage />}>
+                <Route path="patching" element={<PatchingTimerPage />} />
+                <Route path="anaglyph" element={<AnaglyphGamesPage />} />
+                <Route path="monocular" element={<MonocularExercisesPage />} />
+                <Route path="pursuit" element={<PursuitExercisesPage />} />
+                <Route path="saccade" element={<SaccadeTrainingPage />} />
+                <Route path="brock-string" element={<BrockStringPage />} />
+                <Route path="snake" element={<AnaglyphSnakePage />} />
+              </Route>
 
-            <Route path="/personalize" element={<PersonalizePage />} />
-            
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
-        </main>
-      </div>
+              <Route path="/personalize" element={<PersonalizePage />} />
+              
+              <Route path="*" element={<Navigate to="/" replace />} />
+            </Routes>
+          </main>
+        </div>
 
-        {modalType === "login" && (
-          <Modal title="Login" onClose={() => setModalType(null)}>
-            <LoginForm
-              onLogin={() => setModalType(null)}
-              onStatusUpdate={(message, status) => {
-                if (status === "success") setIsLoggedIn(true);
-                showMessage(message, status);
-              }}
-            />
-          </Modal>
-        )}
-        {modalType === "signup" && (
-          <Modal title="Sign Up" onClose={() => setModalType(null)}>
-            <SignupForm
-              onSignup={() => setModalType(null)}
-              onStatusUpdate={(message, status) => showMessage(message, status)}
-            />
-          </Modal>
-        )}
         <AdBanner isVisible={false} />
       </div>
     </BrowserRouter>
@@ -142,4 +115,3 @@ function App() {
 }
 
 export default App;
-

@@ -2,11 +2,9 @@ import { Link } from "react-router-dom";
 
 type HomePageProps = {
   readonly isLoggedIn: boolean;
-  readonly onLogin: () => void;
-  readonly onSignup: () => void;
 };
 
-export default function HomePage({ isLoggedIn, onLogin, onSignup }: HomePageProps) {
+export default function HomePage({ isLoggedIn }: HomePageProps) {
   return (
     <div className="flex flex-col items-center justify-center p-8 bg-white/95 rounded-3xl shadow-2xl max-w-3xl text-center backdrop-blur-md border border-green-100 animate-in fade-in zoom-in-95 duration-500">
       <h1 className="text-4xl font-black text-green-900 mb-2 tracking-tight">
@@ -32,18 +30,18 @@ export default function HomePage({ isLoggedIn, onLogin, onSignup }: HomePageProp
       {/* Auth Actions or App Features Grid */}
       {!isLoggedIn ? (
         <div className="flex flex-wrap gap-4 justify-center w-full max-w-md">
-          <button
-            onClick={onLogin}
-            className="flex-1 min-w-[140px] px-8 py-3 bg-emerald-500 hover:bg-emerald-400 text-green-950 font-bold rounded-2xl shadow-lg shadow-emerald-500/20 transition-all hover:scale-[1.02] active:scale-[0.98]"
+          <Link
+            to="/login"
+            className="flex-1 min-w-[140px] px-8 py-3 bg-emerald-500 hover:bg-emerald-400 text-green-950 font-bold rounded-2xl shadow-lg shadow-emerald-500/20 transition-all hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center"
           >
             Login
-          </button>
-          <button
-            onClick={onSignup}
-            className="flex-1 min-w-[140px] px-8 py-3 bg-green-700 hover:bg-green-600 text-white font-bold rounded-2xl shadow-lg transition-all hover:scale-[1.02] active:scale-[0.98]"
+          </Link>
+          <Link
+            to="/signup"
+            className="flex-1 min-w-[140px] px-8 py-3 bg-green-700 hover:bg-green-600 text-white font-bold rounded-2xl shadow-lg transition-all hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center"
           >
             Register
-          </button>
+          </Link>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
