@@ -10,6 +10,7 @@ export default function StoriesPage() {
   const { showPreloader, hidePreloader } = usePreloader();
   
   const [fontSize, setFontSize] = useState(1.5);
+  const [userLevel, setUserLevel] = useState(1);
   const [selectedStory, setSelectedStory] = useState<{
     content: string;
   } | null>(null);
@@ -23,6 +24,14 @@ export default function StoriesPage() {
   const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
 
   useEffect(() => {
+    // Fetch user progress to get Vision Power level
+    fetch('/api/get-progress-summary')
+      .then(res => res.json())
+      .then(data => {
+        if (data.level) setUserLevel(data.level);
+      })
+      .catch(err => console.error('Failed to fetch level:', err));
+
     return () => {
       if (synthRef.current) {
         synthRef.current.cancel();
@@ -114,6 +123,7 @@ export default function StoriesPage() {
         handlePause={handlePause}
         handleStop={handleStop}
         hasStory={selectedStory !== null}
+        userLevel={userLevel}
       />
       <StoryDisplay
         isLoading={isLoading}

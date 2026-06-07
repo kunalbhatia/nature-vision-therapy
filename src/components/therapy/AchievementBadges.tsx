@@ -1,13 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { FaTrophy, FaStar, FaCrown, FaGamepad, FaRunning, FaCalendarCheck } from 'react-icons/fa';
 
-interface Session {
-  sessionType: string;
-  completedAt: string;
-  durationSeconds: number;
-  score: number;
-}
-
 interface Badge {
   id: string;
   name: string;
@@ -30,41 +23,18 @@ export default function AchievementBadges() {
   ]);
 
   useEffect(() => {
-    fetch('/api/get-all-sessions')
+    fetch('/api/get-achievements')
       .then(res => res.json())
       .then(data => {
-        if (data.history) {
-          const history = data.history as Session[];
-          
-          const patchingSessions = history.filter(s => s.sessionType === 'patching');
-          const exerciseSessions = history.filter(s => s.sessionType.includes('exercise') || ['brock_string', 'near_far', 'saccade', 'character_hunt'].includes(s.sessionType));
-          
-          const totalPatchingTime = patchingSessions.reduce((acc, s) => acc + (s.durationSeconds / 60), 0);
-          const maxScore = history.reduce((max, s) => Math.max(max, s.score || 0), 0);
-
+        if (data.badges) {
+          const earnedStatus = data.badges as { id: string, earned: boolean }[];
           setBadges(prev => prev.map(badge => {
-            let earned = false;
-            switch(badge.type) {
-              case 'total_sessions':
-                if (badge.category === 'patching') earned = patchingSessions.length >= badge.requirement;
-                if (badge.category === 'exercises') earned = exerciseSessions.length >= badge.requirement;
-                break;
-              case 'high_score':
-                earned = maxScore >= badge.requirement;
-                break;
-              case 'total_time':
-                earned = totalPatchingTime >= badge.requirement;
-                break;
-              case 'streak':
-                // Simple check for now, ideally needs a dedicated streak API
-                earned = patchingSessions.length >= badge.requirement; 
-                break;
-            }
-            return { ...badge, earned };
+            const status = earnedStatus.find(s => s.id === badge.id);
+            return { ...badge, earned: status ? status.earned : badge.earned };
           }));
         }
       })
-      .catch(err => console.error('Failed to fetch history for achievement badges:', err));
+      .catch(err => console.error('Failed to fetch backend achievements:', err));
   }, []);
 
   return (

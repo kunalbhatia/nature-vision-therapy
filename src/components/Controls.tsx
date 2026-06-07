@@ -12,21 +12,26 @@ type ControlsProps = {
   readonly handlePause: () => void;
   readonly handleStop: () => void;
   readonly hasStory: boolean;
+  readonly userLevel: number;
 };
+
 const storyTopics = [
-  "Moral Story",
-  "Fairy Story",
-  "Folk Tale",
-  "Science Fiction",
-  "Mystery",
-  "Historical Fiction",
-  "Inspirational",
-  "Magic",
-  "Friendship",
-  "Family",
-  "Courage",
-  "Kindness",
+  { name: "Moral Story", level: 1 },
+  { name: "Fairy Story", level: 1 },
+  { name: "Folk Tale", level: 1 },
+  { name: "Friendship", level: 1 },
+  { name: "Family", level: 1 },
+  { name: "Kindness", level: 1 },
+  { name: "Inspirational", level: 2 },
+  { name: "Courage", level: 2 },
+  { name: "Magic", level: 2 },
+  { name: "Fantasy", level: 2 },
+  { name: "Science Fiction", level: 3 },
+  { name: "Space", level: 3 },
+  { name: "Mystery", level: 3 },
+  { name: "Historical Fiction", level: 3 },
 ];
+
 function Controls({
   onTopicSelect,
   fontSize,
@@ -37,12 +42,14 @@ function Controls({
   handlePause,
   handleStop,
   hasStory,
+  userLevel,
 }: ControlsProps) {
   const toggleFullscreen = () => {
     const doc = document.documentElement;
     if (!document.fullscreenElement) doc.requestFullscreen();
     else document.exitFullscreen();
   };
+
   return (
     <div className="flex flex-wrap justify-between items-center gap-8 mb-4 flex-col">
       <div className="flex space-x-4 items-center">
@@ -117,25 +124,35 @@ function Controls({
           </>
         )}
       </div>
-      <div className="flex space-x-4">
+      <div className="flex flex-col items-center gap-2">
         <select
           onChange={(e) => {
             if (e.target.value) {
               onTopicSelect(e.target.value);
             }
           }}
-          className="bg-emerald-500 hover:bg-emerald-400 text-green-900 font-bold py-2 px-4 rounded-lg"
+          className="bg-emerald-500 hover:bg-emerald-400 text-green-900 font-bold py-2 px-4 rounded-lg outline-none cursor-pointer"
         >
           <option value="">Select a story topic</option>
-          {storyTopics.map((story) => (
-            <option
-              key={story.toLocaleLowerCase()}
-              value={story.toLocaleLowerCase()}
-            >
-              {story}
-            </option>
-          ))}
+          {storyTopics.map((topic) => {
+            const isLocked = userLevel < topic.level;
+            return (
+              <option
+                key={topic.name.toLocaleLowerCase()}
+                value={topic.name.toLocaleLowerCase()}
+                disabled={isLocked}
+                className={isLocked ? "bg-gray-300 text-gray-500" : ""}
+              >
+                {topic.name} {isLocked ? `(Locked - Level ${topic.level})` : ""}
+              </option>
+            );
+          })}
         </select>
+        {userLevel < 3 && (
+          <p className="text-[10px] text-emerald-400 font-bold uppercase tracking-widest">
+            Level up your &quot;Vision Power&quot; to unlock more themes!
+          </p>
+        )}
       </div>
     </div>
   );

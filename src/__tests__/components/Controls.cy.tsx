@@ -28,6 +28,7 @@ describe("Controls Component", () => {
         handlePause={handlePause}
         handleStop={handleStop}
         hasStory={false}
+        userLevel={1}
       />,
     );
   });
@@ -51,8 +52,8 @@ describe("Controls Component", () => {
   });
 
   it("calls onTopicSelect when a topic is selected", () => {
-    cy.get("select").select("magic");
-    cy.get("@onTopicSelect").should("have.been.calledWith", "magic");
+    cy.get("select").select("friendship");
+    cy.get("@onTopicSelect").should("have.been.calledWith", "friendship");
   });
 
   it("renders read aloud controls and handles interaction when story exists", () => {
@@ -67,6 +68,7 @@ describe("Controls Component", () => {
         handlePause={handlePause}
         handleStop={handleStop}
         hasStory={true}
+        userLevel={1}
       />,
     );
     cy.get('[data-tip="Read Aloud"] button').should("exist").click();
