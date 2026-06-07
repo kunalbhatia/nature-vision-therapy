@@ -34,23 +34,32 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     
     // Calculate current streak
     const patchingDates = allSessions
-      .filter(s => s.sessionType === 'patching' && s.completed)
-      .map(s => s.date)
+      .filter(s => s.sessionType === 'patching' && (s.completed || s.completedAt))
+      .map(s => {
+        if (s.date) return s.date;
+        return new Date(s.completedAt).toISOString().split('T')[0];
+      })
       .sort((a, b) => new Date(b).getTime() - new Date(a).getTime());
     
+    // Unique sorted dates
+    const uniqueDates = Array.from(new Set(patchingDates));
+
     let streak = 0;
-    if (patchingDates.length > 0) {
+    if (uniqueDates.length > 0) {
       const today = new Date().toISOString().split('T')[0];
-      const lastSessionDate = patchingDates[0];
-      const diffDays = Math.floor((new Date(today).getTime() - new Date(lastSessionDate).getTime()) / (1000 * 3600 * 24));
+      const yesterday = new Date();
+      yesterday.setDate(yesterday.getDate() - 1);
+      const yesterdayStr = yesterday.toISOString().split('T')[0];
+
+      const lastSessionDate = uniqueDates[0];
       
-      if (diffDays <= 1) {
+      if (lastSessionDate === today || lastSessionDate === yesterdayStr) {
         streak = 1;
-        for (let i = 0; i < patchingDates.length - 1; i++) {
-          const d1 = new Date(patchingDates[i]);
-          const d2 = new Date(patchingDates[i+1]);
+        for (let i = 0; i < uniqueDates.length - 1; i++) {
+          const d1 = new Date(uniqueDates[i]);
+          const d2 = new Date(uniqueDates[i+1]);
           const diff = (d1.getTime() - d2.getTime()) / (1000 * 3600 * 24);
-          if (diff === 1) streak++;
+          if (Math.round(diff) === 1) streak++;
           else break;
         }
       }
@@ -65,8 +74,21 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return !isNaN(completedDate.getTime()) && completedDate >= sevenDaysAgo;
     });
 
+    const weeklyExerciseTypes = new Set(
+      allSessions
+        .filter(s => {
+          const completedDate = new Date(s.completedAt);
+          return (
+            s.sessionType !== 'patching' && 
+            !isNaN(completedDate.getTime()) && 
+            completedDate >= sevenDaysAgo
+          );
+        })
+        .map(s => s.sessionType)
+    );
+
     const lastSession = allSessions.length > 0 
-      ? allSessions.sort((a, b) => new Date(b.completedAt).getTime() - new Date(a.completedAt).getTime())[0]
+      ? allSessions.sort((a, b) => new Date(b.completedAt || 0).getTime() - new Date(a.completedAt || 0).getTime())[0]
       : null;
 
     return res.status(200).json({
@@ -75,6 +97,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       exercisesCompleted,
       streak,
       weeklyStats: weeklySessions.length,
+      weeklyChallenge: {
+        count: weeklyExerciseTypes.size,
+        total: 5,
+        completed: weeklyExerciseTypes.size >= 5,
+        types: Array.from(weeklyExerciseTypes)
+      },
       level: Math.floor(totalXP / 500) + 1,
       nextLevelXP: 500 - (totalXP % 500),
       highestSnakeLevel: user?.highestSnakeLevel || 1,

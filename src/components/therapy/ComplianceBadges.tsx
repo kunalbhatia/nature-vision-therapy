@@ -16,21 +16,21 @@ interface Badge {
 
 export default function ComplianceBadges() {
   const [badges, setBadges] = useState<Badge[]>([
-    { id: '7-day', name: '7-Day Star', description: 'Patching for 7 days straight!', icon: <FaStar className="text-yellow-400" />, requirement: 7, earned: false },
-    { id: '30-day', name: '30-Day Hero', description: 'A whole month of patching!', icon: <FaTrophy className="text-blue-400" />, requirement: 30, earned: false },
-    { id: '100-day', name: '100-Day King', description: 'The absolute master of vision!', icon: <FaCrown className="text-purple-500" />, requirement: 100, earned: false },
+    { id: 's-7', name: '7-Day Star', description: 'Patching for 7 days straight!', icon: <FaStar className="text-yellow-400" />, requirement: 7, earned: false },
+    { id: 'p-30', name: '30-Day Hero', description: 'A whole month of patching!', icon: <FaTrophy className="text-blue-400" />, requirement: 30, earned: false },
+    { id: 't-1000', name: 'Time Master', description: 'The absolute master of vision!', icon: <FaCrown className="text-purple-500" />, requirement: 1000, earned: false },
   ]);
 
   useEffect(() => {
-    fetch('/api/get-patching-history')
+    fetch('/api/get-achievements')
       .then(res => res.json())
       .then(data => {
-        if (data.history) {
-          const completedDays = data.history.filter((s: Session) => s.completed).length;
-          setBadges(prev => prev.map(badge => ({
-            ...badge,
-            earned: completedDays >= badge.requirement
-          })));
+        if (data.badges) {
+          const earnedStatus = data.badges as { id: string, earned: boolean }[];
+          setBadges(prev => prev.map(badge => {
+            const status = earnedStatus.find(s => s.id === badge.id);
+            return { ...badge, earned: status ? status.earned : badge.earned };
+          }));
         }
       })
       .catch(err => console.error('Failed to fetch history for badges:', err));
