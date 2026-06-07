@@ -16,6 +16,7 @@ This platform is designed to support the treatment of binocular vision disorders
 - **Oculomotor Control:** Improving the speed and accuracy of Saccades (jumping focus) and Smooth Pursuits (tracking objects).
 - **Accommodative Facility:** Training the eye's ability to switch focus between near and far targets.
 - **Patching Compliance:** Incentivizing patching sessions with high-quality AI-generated nature stories and a rewarding XP/Leveling system.
+- **Device Enforcement:** Built-in **Device Restrictions** ensure that high-intensity clinical games and exercises are only accessible on Tablets, Laptops, or Desktops, preventing ineffective training on small mobile screens.
 
 ### 👁️ The Vision Therapy Suite
 
@@ -31,7 +32,9 @@ This platform is designed to support the treatment of binocular vision disorders
 - **Near-Far Focus:** Promotes flexibility in the eye's focusing muscles (ciliary muscles) by alternating between close and distant visual tasks.
 
 ### 📊 Monitoring Progress
-- **Child Dashboard:** Gamifies therapy. Children earn XP, level up their "Vision Powers," and unlock achievement badges in a "Trophy Gallery."
+- **Child Dashboard:** Gamifies therapy. Children earn XP, level up their "Vision Powers," and unlock achievement badges in a "Trophy Gallery." 
+- **Mastery of Variety (Weekly Mission):** Encourages consistent engagement by tracking and rewarding the completion of 5 unique exercise types each week.
+- **Theme Progression:** Advancing in "Vision Power" levels unlocks new, high-engagement story themes (e.g., Space, Fantasy, Sci-Fi) in the AI Story Generator.
 - **Parent Dashboard:** Provides clinical data. Parents can track patching minutes, exercise completion history, and view visual "Patching Trends" via automated charts to ensure compliance with the prescribed plan.
 
 ---
@@ -41,9 +44,9 @@ This platform is designed to support the treatment of binocular vision disorders
 ### Technology Stack
 - **Frontend:** React 19, TypeScript, Vite, Tailwind CSS, DaisyUI.
 - **Backend:** Serverless Vercel Functions (Node.js/TypeScript).
-- **Database:** MongoDB (User accounts & session history).
-- **AI Integration:** Google Generative AI (Gemini 1.5/2.0) for dynamic story generation.
-- **UI/UX:** Nature-inspired palette, fully responsive, and accessible controls.
+- **Database:** MongoDB (User accounts, session history, and persistent achievements).
+- **AI Integration:** Google Generative AI (Gemini 1.5 Flash) for context-aware dynamic story generation.
+- **UI/UX:** Nature-inspired palette, fully responsive (with clinical device enforcement), and integrated Speech Synthesis (Web Speech API) for read-aloud mode.
 
 ### 🚀 Getting Started
 
@@ -68,7 +71,7 @@ This platform is designed to support the treatment of binocular vision disorders
    ```env
    MONGODB_URI=your_mongodb_connection_string
    JWT_SECRET=your_secret_key
-   GOOGLE_AI_API_KEY=your_api_key
+   VITE_GEMINI_API_KEY=your_api_key
    ```
 
 #### Scripts
@@ -81,7 +84,7 @@ This platform is designed to support the treatment of binocular vision disorders
 ### 🏗️ Architecture Summary
 
 #### Directory Structure
-- `api/`: Serverless endpoints. Consolidated `auth.ts` handles all identity logic to stay within Vercel's hobby limits.
+- `api/`: Serverless endpoints. Includes `get-achievements.ts` for centralized badge logic and `get-progress-summary.ts` for dashboard data.
 - `src/components/exercises/`: Core vision training modules.
 - `src/components/games/`: Binocular anaglyph games.
 - `src/components/therapy/`: Compliance tools (Timer, Badges, Streak Calendar).
@@ -98,7 +101,7 @@ All game and exercise components **must** implement a fullscreen mode upon start
 
 ### 2. Vercel Hobby Plan Compliance
 The application is optimized for Vercel's free tier.
-- **Consolidate APIs:** Do not create a separate file for every small function. Group related logic (like authentication) into single dispatcher files in the `api/` folder.
+- **Consolidate APIs:** Do not create a separate file for every small function. Group related logic into single dispatcher files in the `api/` folder.
 - **Serverless Limits:** Stay under the 12-function limit.
 
 ### 3. Git Workflow
@@ -107,8 +110,7 @@ The application is optimized for Vercel's free tier.
 
 ### 4. Code Quality & Performance
 - **TypeScript Strictness:** Never use `any`. Define interfaces for all API responses and component props.
-- **Surgical Edits:** Avoid large refactors unless necessary. Focus on the task at hand to keep PRs reviewable.
-- **Testing:** New features must include either a Cypress component test or an E2E test. Empirical verification is required for all bug fixes.
+- **Testing:** New features must include a Cypress component test. Empirical verification is required for all bug fixes.
 
 ---
 
