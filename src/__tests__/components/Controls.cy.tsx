@@ -52,8 +52,8 @@ describe("Controls Component", () => {
   });
 
   it("calls onTopicSelect when a topic is selected", () => {
-    cy.get("select").select("magic");
-    cy.get("@onTopicSelect").should("have.been.calledWith", "magic");
+    cy.get("select").select("friendship");
+    cy.get("@onTopicSelect").should("have.been.calledWith", "friendship");
   });
 
   it("renders read aloud controls and handles interaction when story exists", () => {
