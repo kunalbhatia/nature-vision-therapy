@@ -20,6 +20,9 @@ This platform is designed to support the treatment of binocular vision disorders
 
 ### 👁️ The Vision Therapy Suite
 
+<img width="1640" height="736" alt="image" src="https://github.com/user-attachments/assets/b1febf6d-530f-4930-923f-35d2649a4816" />
+
+
 #### 3D Anaglyph Training (Requires Red-Blue Glasses)
 - **Virtual Brock String:** A digital simulation of the gold-standard tool for physiological diplopia training. Helps patients identify and fix suppression by visualizing the "V" pattern of strings and beads.
 - **Anaglyph Snake & Maze:** Games where elements are split across color channels. If the patient suppresses one eye, they will lose sight of either the walls or the player character, forcing active binocular participation.
@@ -32,6 +35,8 @@ This platform is designed to support the treatment of binocular vision disorders
 - **Near-Far Focus:** Promotes flexibility in the eye's focusing muscles (ciliary muscles) by alternating between close and distant visual tasks.
 
 ### 📊 Monitoring Progress
+<img width="1186" height="896" alt="image" src="https://github.com/user-attachments/assets/146c8559-ef27-408b-bf04-4a47557407e3" />
+
 - **Child Dashboard:** Gamifies therapy. Children earn XP, level up their "Vision Powers," and unlock achievement badges in a "Trophy Gallery." 
 - **Mastery of Variety (Weekly Mission):** Encourages consistent engagement by tracking and rewarding the completion of 5 unique exercise types each week.
 - **Theme Progression:** Advancing in "Vision Power" levels unlocks new, high-engagement story themes (e.g., Space, Fantasy, Sci-Fi) in the AI Story Generator.
