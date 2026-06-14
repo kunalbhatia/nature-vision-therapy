@@ -4,6 +4,28 @@
 
 Nature Theme Vision Therapy is a specialized, web-based platform designed to enhance pediatric vision therapy through **interactive storytelling** and **clinically-validated exercises**. By merging Google's Generative AI (Gemini) with traditional vision therapy protocols, the application transforms repetitive exercises into engaging missions, solving the "compliance hurdle" common in pediatric treatment.
 
+## 💚 Why This Exists
+
+There's a moment when your child's doctor says "lazy eye" and hands 
+you a pamphlet. The pamphlet says: daily exercises, consistent 
+practice, 20–30 minutes a session.
+
+What the pamphlet doesn't tell you is how uncomfortable clinics can 
+be for a child. The strange equipment. The unfamiliar faces. The 
+anxiety that builds before every visit — until they start dreading 
+it altogether.
+
+I'm a developer. When I saw my child struggling with that, I built 
+something they could do at home, in their safe space.
+
+**Nature Vision Therapy** uses AI to generate calm, nature-inspired 
+stories — fresh every session, with adjustable font controls designed 
+for vision therapy practice. No clinical setting. No anxiety. 
+Just stories, at the right pace, for little eyes that are learning 
+to work together.
+
+Built by a parent. For any parent who needed this and couldn't find it.
+
 ---
 
 ## 👨‍⚕️ Clinical Overview (For Eye Doctors)
