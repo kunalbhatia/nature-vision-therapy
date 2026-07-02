@@ -271,7 +271,7 @@ export default function AnaglyphLudo() {
 
   // Execute actual move with step-by-step animation
   const moveToken = async (token: Token) => {
-    if (!diceUnlocked || isRolling || !diceSumResult) return;
+    if (!diceUnlocked || isRolling || diceSumResult === null) return;
     
     // Lock dice/move controls while animating
     setDiceUnlocked(false);
@@ -386,7 +386,7 @@ export default function AnaglyphLudo() {
 
   // AI execution sequence after dice rolled
   useEffect(() => {
-    if (!gameStarted || turn === 'red' || !vsComputer || !hasRolledThisTurn || !diceSumResult) return;
+    if (!gameStarted || turn === 'red' || !vsComputer || !hasRolledThisTurn || diceSumResult === null) return;
 
     const moveTimer = setTimeout(() => {
       const moveable = getMoveableTokens('cyan', diceSumResult);
@@ -413,7 +413,7 @@ export default function AnaglyphLudo() {
 
   // Red Player No-Moves auto check
   useEffect(() => {
-    if (!gameStarted || turn === 'cyan' || !hasRolledThisTurn || !diceSumResult || !diceUnlocked) return;
+    if (!gameStarted || turn === 'cyan' || !hasRolledThisTurn || diceSumResult === null || !diceUnlocked) return;
 
     const moveable = getMoveableTokens('red', diceSumResult);
     if (moveable.length === 0) {
@@ -427,7 +427,7 @@ export default function AnaglyphLudo() {
 
   // Cyan Player No-Moves auto check (Pass & Play)
   useEffect(() => {
-    if (!gameStarted || turn === 'red' || vsComputer || !hasRolledThisTurn || !diceSumResult || !diceUnlocked) return;
+    if (!gameStarted || turn === 'red' || vsComputer || !hasRolledThisTurn || diceSumResult === null || !diceUnlocked) return;
 
     const moveable = getMoveableTokens('cyan', diceSumResult);
     if (moveable.length === 0) {
@@ -441,7 +441,7 @@ export default function AnaglyphLudo() {
 
   // Human Player auto-move when only one token is moveable
   useEffect(() => {
-    if (!gameStarted || !hasRolledThisTurn || !diceSumResult || !diceUnlocked) return;
+    if (!gameStarted || !hasRolledThisTurn || diceSumResult === null || !diceUnlocked) return;
     
     if (turn === 'red') {
       const moveable = getMoveableTokens('red', diceSumResult);
