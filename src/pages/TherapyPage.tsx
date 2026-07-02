@@ -13,6 +13,7 @@ import SaccadeTraining from "../components/exercises/SaccadeTraining";
 import AnaglyphSnake from "../components/games/AnaglyphSnake";
 import AnaglyphHiddenPicture from "../components/games/AnaglyphHiddenPicture";
 import AnaglyphMaze from "../components/games/AnaglyphMaze";
+import AnaglyphLudo from "../components/games/AnaglyphLudo";
 import BrockString from "../components/exercises/BrockString";
 import DeviceRestriction from "../components/DeviceRestriction";
 
@@ -133,14 +134,15 @@ export function PatchingTimerPage() {
 }
 
 export function AnaglyphGamesPage() { 
-  const [active, setActive] = useState<'bubble' | 'hidden' | 'maze' | null>(null);
+  const [active, setActive] = useState<'bubble' | 'hidden' | 'maze' | 'ludo' | null>(null);
 
   if (active === 'bubble') return <AnaglyphBubblePop />;
   if (active === 'hidden') return <AnaglyphHiddenPicture />;
   if (active === 'maze') return <AnaglyphMaze />;
+  if (active === 'ludo') return <AnaglyphLudo />;
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-4xl">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 w-full max-w-5xl p-4">
       <button 
         onClick={() => setActive('bubble')} 
         className="group relative h-48 rounded-[2rem] bg-gradient-to-br from-indigo-500 to-violet-600 p-6 text-white transition-all hover:scale-105 active:scale-95 shadow-xl hover:shadow-indigo-500/20 overflow-hidden"
@@ -171,6 +173,17 @@ export function AnaglyphGamesPage() {
         <div className="relative z-10 text-left">
            <h3 className="text-2xl font-black mb-2">Ghost Maze</h3>
            <p className="text-sm opacity-80">Navigate using simultaneous perception.</p>
+        </div>
+      </button>
+
+      <button 
+        onClick={() => setActive('ludo')} 
+        className="group relative h-48 rounded-[2rem] bg-gradient-to-br from-rose-500 to-cyan-600 p-6 text-white transition-all hover:scale-105 active:scale-95 shadow-xl hover:shadow-rose-500/20 overflow-hidden"
+      >
+        <div className="absolute top-0 right-0 p-4 opacity-20 group-hover:scale-150 transition-transform"><FaGamepad size={64} /></div>
+        <div className="relative z-10 text-left">
+           <h3 className="text-2xl font-black mb-2">Fusion Ludo</h3>
+           <p className="text-sm opacity-80">Anti-suppression board game with dual-color dice.</p>
         </div>
       </button>
     </div>
