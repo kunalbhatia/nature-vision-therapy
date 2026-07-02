@@ -92,7 +92,7 @@ export default function AnaglyphLudo() {
     if (!soundEnabled) return;
     try {
       if (!audioContextRef.current) {
-        audioContextRef.current = new (window.AudioContext || (window as any).webkitAudioContext)();
+        audioContextRef.current = new (window.AudioContext || (window as Window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext)();
       }
       const ctx = audioContextRef.current;
       const osc = ctx.createOscillator();
@@ -320,7 +320,7 @@ export default function AnaglyphLudo() {
     await new Promise(resolve => setTimeout(resolve, 150));
 
     let capturedOpponent = false;
-    let updatedTokens = tokens.map((t): Token => {
+    const updatedTokens = tokens.map((t): Token => {
       // The current token is already at the end coordinates in state
       if (t.id === token.id) {
         return { ...t, state: currentState, positionIndex: currentIndex };
