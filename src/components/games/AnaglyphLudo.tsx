@@ -195,8 +195,12 @@ export default function AnaglyphLudo() {
       if (count > 12) {
         clearInterval(interval);
         
-        const finalRed = Math.floor(Math.random() * 7);
-        const finalCyan = Math.floor(Math.random() * 7);
+        let finalRed = Math.floor(Math.random() * 7);
+        let finalCyan = Math.floor(Math.random() * 7);
+        while (finalRed === 0 && finalCyan === 0) {
+          finalRed = Math.floor(Math.random() * 7);
+          finalCyan = Math.floor(Math.random() * 7);
+        }
         setRedDice(finalRed);
         setCyanDice(finalCyan);
         setIsRolling(false);
@@ -210,7 +214,7 @@ export default function AnaglyphLudo() {
           const options = new Set<number>();
           options.add(sum);
           while (options.size < 3) {
-            options.add(Math.floor(Math.random() * 13)); // random options between 0 and 12
+            options.add(Math.floor(Math.random() * 12) + 1); // random options between 1 and 12
           }
           setSumOptions(Array.from(options).sort((a, b) => a - b));
           setDiceUnlocked(false);
@@ -271,7 +275,7 @@ export default function AnaglyphLudo() {
 
   // Execute actual move with step-by-step animation
   const moveToken = async (token: Token) => {
-    if (!diceUnlocked || isRolling || !diceSumResult) return;
+    if (!diceUnlocked || isRolling || diceSumResult === null) return;
     
     // Lock dice/move controls while animating
     setDiceUnlocked(false);
@@ -386,7 +390,7 @@ export default function AnaglyphLudo() {
 
   // AI execution sequence after dice rolled
   useEffect(() => {
-    if (!gameStarted || turn === 'red' || !vsComputer || !hasRolledThisTurn || !diceSumResult) return;
+    if (!gameStarted || turn === 'red' || !vsComputer || !hasRolledThisTurn || diceSumResult === null) return;
 
     const moveTimer = setTimeout(() => {
       const moveable = getMoveableTokens('cyan', diceSumResult);
@@ -413,7 +417,7 @@ export default function AnaglyphLudo() {
 
   // Red Player No-Moves auto check
   useEffect(() => {
-    if (!gameStarted || turn === 'cyan' || !hasRolledThisTurn || !diceSumResult || !diceUnlocked) return;
+    if (!gameStarted || turn === 'cyan' || !hasRolledThisTurn || diceSumResult === null || !diceUnlocked) return;
 
     const moveable = getMoveableTokens('red', diceSumResult);
     if (moveable.length === 0) {
@@ -427,7 +431,7 @@ export default function AnaglyphLudo() {
 
   // Cyan Player No-Moves auto check (Pass & Play)
   useEffect(() => {
-    if (!gameStarted || turn === 'red' || vsComputer || !hasRolledThisTurn || !diceSumResult || !diceUnlocked) return;
+    if (!gameStarted || turn === 'red' || vsComputer || !hasRolledThisTurn || diceSumResult === null || !diceUnlocked) return;
 
     const moveable = getMoveableTokens('cyan', diceSumResult);
     if (moveable.length === 0) {
@@ -441,7 +445,7 @@ export default function AnaglyphLudo() {
 
   // Human Player auto-move when only one token is moveable
   useEffect(() => {
-    if (!gameStarted || !hasRolledThisTurn || !diceSumResult || !diceUnlocked) return;
+    if (!gameStarted || !hasRolledThisTurn || diceSumResult === null || !diceUnlocked) return;
     
     if (turn === 'red') {
       const moveable = getMoveableTokens('red', diceSumResult);
