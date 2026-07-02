@@ -195,8 +195,12 @@ export default function AnaglyphLudo() {
       if (count > 12) {
         clearInterval(interval);
         
-        const finalRed = Math.floor(Math.random() * 7);
-        const finalCyan = Math.floor(Math.random() * 7);
+        let finalRed = Math.floor(Math.random() * 7);
+        let finalCyan = Math.floor(Math.random() * 7);
+        while (finalRed === 0 && finalCyan === 0) {
+          finalRed = Math.floor(Math.random() * 7);
+          finalCyan = Math.floor(Math.random() * 7);
+        }
         setRedDice(finalRed);
         setCyanDice(finalCyan);
         setIsRolling(false);
@@ -210,7 +214,7 @@ export default function AnaglyphLudo() {
           const options = new Set<number>();
           options.add(sum);
           while (options.size < 3) {
-            options.add(Math.floor(Math.random() * 13)); // random options between 0 and 12
+            options.add(Math.floor(Math.random() * 12) + 1); // random options between 1 and 12
           }
           setSumOptions(Array.from(options).sort((a, b) => a - b));
           setDiceUnlocked(false);
